@@ -7,13 +7,13 @@ export default function SplashScreen() {
   const router = useRouter();
 
   const [fontsLoaded] = useFonts({
-    PixelFont: require('@/assets/fonts/PixelGameFont.ttf'),
+    PixelFont: require('@/src/assets/fonts/PixelGameFont.ttf'),
   });
 
   useEffect(() => {
     if (fontsLoaded) {
       const timer = setTimeout(() => {
-        router.replace('/login-or-register'); 
+        router.replace('/screens/home'); 
       }, 5000);
 
       return () => clearTimeout(timer);
@@ -27,7 +27,7 @@ export default function SplashScreen() {
   return (
     <View style={styles.container}>
       <Image
-        source={require('@/assets/images/reflora-logo1.png')}
+        source={require('@/src/assets/images/reflora-logo1.png')}
         style={styles.logo}
         resizeMode="contain"
       />

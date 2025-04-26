@@ -1,5 +1,22 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import styles from './registerStyles';
+import { MaterialIcons } from '@expo/vector-icons';
+import { router, useRouter } from 'expo-router';
+
+export const unstable_settings = {
+    headerShown: true,
+    headerTitle: 'Registro',
+    headerLeft: () => (
+        <MaterialIcons
+            name="arrow-back"
+            size={24}
+            color="black"
+            onPress={() => router.back()}
+            style={{ marginLeft: 15 }}
+        />
+    ),
+};
 
 export default function RegisterScreen() {
     const [firstName, setFirstName] = useState('');
@@ -7,6 +24,7 @@ export default function RegisterScreen() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const router = useRouter();
 
     const dismissKeyboard = () => {
         Keyboard.dismiss();
@@ -15,6 +33,14 @@ export default function RegisterScreen() {
     return (
         <TouchableWithoutFeedback onPress={dismissKeyboard} style={{ flex: 1 }}>
             <View style={styles.container}>
+
+                <TouchableOpacity
+                    style={styles.backButton}
+                    onPress={() => router.back()}
+                >
+                    <MaterialIcons name="arrow-back" size={32} color="#000" />
+                </TouchableOpacity>
+
                 <Text style={styles.title}>Cadastro</Text>
 
                 <Text style={styles.label}>Primeiro Nome</Text>
@@ -75,60 +101,3 @@ export default function RegisterScreen() {
     );
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'flex-start',
-        padding: 20,
-        paddingTop: 50,
-        backgroundColor: '#EFEAD7',
-    },
-    title: {
-        color: '#0B3824',
-        fontSize: 36,
-        fontWeight: 'bold',
-        marginBottom: 40,
-        textAlign: 'center',
-    },
-    label: {
-        fontWeight: 'bold',
-        fontSize: 16,
-        color: '#050038',
-        marginBottom: 10,
-        marginTop: 10,
-        textAlign: 'left',
-    },
-    input: {
-        height: 45,
-        borderColor: '#ccc',
-        borderWidth: 1,
-        borderRadius: 5,
-        paddingHorizontal: 10,
-        marginBottom: 20,
-        color: '#333',
-    },
-    button: {
-        marginTop: 20,
-        backgroundColor: '#1A1A1A',
-        borderRadius: 5,
-        paddingVertical: 12,
-        alignItems: 'center',
-    },
-    buttonText: {
-        color: '#fff',
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
-    orSeparator: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginTop: 30,
-        marginBottom: 20,
-    },
-    separatorLine: {
-        flex: 1,
-        height: 1,
-        backgroundColor: '#ccc',
-    
-    },
-  });
