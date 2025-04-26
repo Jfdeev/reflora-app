@@ -1,11 +1,10 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
-import styles from './homeStyles';
-import { MaterialIcons } from '@expo/vector-icons';
+import styles from './welcomeStyles';
 
 
-export default function HomeScreen() {
+export default function WelcomeScreen() {
 const router = useRouter();
   return (
     <View style={styles.container}>

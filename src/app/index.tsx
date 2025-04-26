@@ -13,7 +13,7 @@ export default function SplashScreen() {
   useEffect(() => {
     if (fontsLoaded) {
       const timer = setTimeout(() => {
-        router.replace('/screens/home'); 
+        router.replace('/screens/welcome'); 
       }, 5000);
 
       return () => clearTimeout(timer);
