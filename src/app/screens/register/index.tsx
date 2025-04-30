@@ -92,7 +92,17 @@ export default function RegisterScreen() {
                     onChangeText={setConfirmPassword}
                 />
 
-                <TouchableOpacity style={styles.button} onPress={dismissKeyboard}>
+                <TouchableOpacity 
+                    style={styles.button}
+                    onPress={() => {
+                      dismissKeyboard();
+                      if (!firstName || !lastName || !email || !password || password !== confirmPassword) {
+                        alert('Preencha todos os campos corretamente.');
+                        return;
+                      }
+                    
+                      router.push('/screens/sensor-register');
+                    }}>
                     <Text style={styles.buttonText}>Cadastrar-se</Text>
                 </TouchableOpacity>
 
