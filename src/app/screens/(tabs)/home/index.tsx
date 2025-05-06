@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { MaterialIcons, FontAwesome5, Ionicons } from '@expo/vector-icons';
-import styles from './homeStyle';
-
+import styles from '../../../styles/homeStyle';
 export default function HomeScreen() {
   return (
-    <ScrollView style={styles.container}>
+    <View style={{flex: 1, backgroundColor: '#F2E9D7'}}>
+      <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Início</Text>
       </View>
@@ -57,6 +57,7 @@ export default function HomeScreen() {
       </View>
 
       <View style={{ height: 60 }} />
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }

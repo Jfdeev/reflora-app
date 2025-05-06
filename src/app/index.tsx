@@ -2,6 +2,8 @@ import { useEffect } from 'react';
 import { View, Image, StyleSheet, Text } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useFonts } from 'expo-font';
+import 'react-native-gesture-handler';
+
 
 export default function SplashScreen() {
   const router = useRouter();
