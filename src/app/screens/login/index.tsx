@@ -2,16 +2,17 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import styles from './loginStyles';
 import { MaterialIcons } from '@expo/vector-icons';
-import { router, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { Formik } from 'formik';
 import { loginSchema } from '../../validations/validationSchemas';
+const router = useRouter();
 
 export default function LoginScreen() {
   //esse dimissKeyboard fiz p quando o usuário clicar na tela, ele sair da caixa de texto, como tem normalmente em outros apps. 
   const dismissKeyboard = () => {
     Keyboard.dismiss();
   };
-
+  
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
       <View style={styles.container}>
@@ -29,7 +30,7 @@ export default function LoginScreen() {
         initialValues={{ email: '', password: '' }}
         validationSchema={loginSchema}
         onSubmit={(values) => {
-           router.push('/screens/(tabs)/home');
+          router.push('/screens/(tabs)/home');
         }}
       >
          {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (

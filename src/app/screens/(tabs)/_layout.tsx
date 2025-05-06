@@ -13,12 +13,44 @@ export default function TabsLayout() {
           height: 60,
         },
       })}
-      // Falta adicionar os icones
+      // Adicionei os ícones
     >
-      <Tabs.Screen name="home/index" options={{ title: 'Início' }} />
-      <Tabs.Screen name="data-screen/index" options={{ title: 'Dados' }} />
-      <Tabs.Screen name="alert/index" options={{ title: 'Alertas' }} />
-      <Tabs.Screen name="config/index" options={{ title: 'Configurações' }} />
+      <Tabs.Screen
+        name="home/index"
+        options={{
+          title: 'Início',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="home-outline" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="data-screen/index"
+        options={{
+          title: 'Dados',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="leaf-outline" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="alert/index"
+        options={{
+          title: 'Alertas',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="notifications-outline" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="config/index"
+        options={{
+          title: 'Configurações',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="settings-outline" size={size} color={color} />
+          ),
+        }}
+      />
     </Tabs>
   );
 }
