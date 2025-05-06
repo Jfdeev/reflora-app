@@ -3,19 +3,17 @@ import { View, Text, TextInput, TouchableOpacity, Keyboard, TouchableWithoutFeed
 import styles from './loginStyles';
 import { MaterialIcons } from '@expo/vector-icons';
 import { router, useRouter } from 'expo-router';
+import { Formik } from 'formik';
+import { loginSchema } from '../../validations/validationSchemas';
 
 export default function LoginScreen() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const router = useRouter();
-
   //esse dimissKeyboard fiz p quando o usuário clicar na tela, ele sair da caixa de texto, como tem normalmente em outros apps. 
   const dismissKeyboard = () => {
     Keyboard.dismiss();
   };
 
   return (
-    <TouchableWithoutFeedback onPress={dismissKeyboard} style={{ flex: 1 }}>
+    <TouchableWithoutFeedback onPress={dismissKeyboard}>
       <View style={styles.container}>
 
         <TouchableOpacity
@@ -26,17 +24,28 @@ export default function LoginScreen() {
         </TouchableOpacity>
 
         <Text style={styles.title}>Login</Text>
-
+        
+        <Formik
+        initialValues={{ email: '', password: '' }}
+        validationSchema={loginSchema}
+        onSubmit={(values) => {
+           router.push('/(tabs)/home');
+        }}
+      >
+         {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+            <>
         <Text style={styles.label}>Email</Text>
         <TextInput
           placeholder="name@example.com"
           style={styles.input}
           placeholderTextColor="#999"
-          value={email}
-          onChangeText={setEmail}
+          value={values.email}
+          onChangeText={handleChange('email')}
           keyboardType="email-address"
           autoCapitalize="none"
+          onBlur={handleBlur('email')}
         />
+         {touched.email && errors.email && <Text style={styles.error}>{errors.email}</Text>}
 
         <Text style={styles.label}>Senha</Text>
         <TextInput
@@ -44,13 +53,19 @@ export default function LoginScreen() {
           style={styles.input}
           placeholderTextColor="#999"
           secureTextEntry
-          value={password}
-          onChangeText={setPassword}
+          value={values.password}
+          onChangeText={handleChange('password')}
+          onBlur={handleBlur('password')}
         />
+        {touched.password && errors.password && <Text style={styles.error}>{errors.password}</Text>}
 
-        <TouchableOpacity style={styles.button} onPress={() => router.push('/screens/(tabs)/home')}>
+        <TouchableOpacity style={styles.button} onPress={() => handleSubmit()}>
+          
           <Text style={styles.buttonText}>Entrar</Text>
         </TouchableOpacity>
+        </>
+          )}
+        </Formik>
 
       </View>
     </TouchableWithoutFeedback>
