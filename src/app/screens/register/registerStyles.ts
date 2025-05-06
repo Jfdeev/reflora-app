@@ -63,6 +63,11 @@ const styles = StyleSheet.create({
         zIndex: 1,
         padding: 10,
       },
+      error: {
+        color: 'red',
+        fontSize: 12,
+        marginBottom: 8,
+      }
   });
 
   export default styles;

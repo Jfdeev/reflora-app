@@ -29,7 +29,7 @@ export default function SensorRegisterScreen() {
   const handleSubmit = () => {
     const key = code.join('');
     if (key.length === 4) {
-      Alert.alert('Chave enviada', `Código: ${key}`);
+      router.push('/screens/home');
     } else {
       Alert.alert('Erro', 'Digite os 4 dígitos da chave.');
     }
@@ -60,7 +60,7 @@ export default function SensorRegisterScreen() {
           {code.map((digit, index) => (
             <TextInput
               key={index}
-              ref={(ref) => inputRefs.current[index] = ref}
+              ref={(ref) => { inputRefs.current[index] = ref; }}
               style={styles.codeInput}
               maxLength={1}
               keyboardType="numeric"
