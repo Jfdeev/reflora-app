@@ -29,7 +29,7 @@ export default function LoginScreen() {
         initialValues={{ email: '', password: '' }}
         validationSchema={loginSchema}
         onSubmit={(values) => {
-           router.push('/(tabs)/home');
+           router.push('/screens/(tabs)/home');
         }}
       >
          {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
