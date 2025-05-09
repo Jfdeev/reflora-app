@@ -29,11 +29,7 @@ export default function NotificationsScreen() {
     <View style={styles.container}>
       {/* Topo */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="#1B3612" />
-        </TouchableOpacity>
         <Text style={styles.title}>Alertas</Text>
-        <Ionicons name="menu" size={24} color="#1B3612" />
       </View>
 
 

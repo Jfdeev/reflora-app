@@ -10,14 +10,14 @@ export default StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 20,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#1B3612',
+    color: '#1B3A34',
   },
   notifications: {
     gap: 15,
