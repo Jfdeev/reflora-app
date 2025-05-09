@@ -2,9 +2,12 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { MaterialIcons, FontAwesome5, Ionicons } from '@expo/vector-icons';
 import styles from '../../../styles/homeStyle';
+import { useRouter } from 'expo-router';
+
+const router = useRouter();
 export default function HomeScreen() {
   return (
-    <View style={{flex: 1, backgroundColor: '#F2E9D7'}}>
+    <View style={{flex: 1, backgroundColor: '#EFEAD7'}}>
       <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Início</Text>
@@ -44,17 +47,20 @@ export default function HomeScreen() {
         <Text style={styles.chartText}>[Gráfico de exemplo]</Text>
       </View>
 
+      
       <View style={styles.sectionHeader}>
         <Ionicons name="notifications" size={20} color="#1B3A34" />
         <Text style={styles.sectionTitle}>Avisos Recentes</Text>
         <Ionicons name="chevron-forward" size={20} color="#1B3A34" />
       </View>
+      <TouchableOpacity onPress={() => router.push('/screens/(tabs)/alert')}>
       <View style={styles.alertBox}>
         <Ionicons name="notifications" size={20} color="#F2E9D7" />
         <Text style={styles.alertText}>
           A temperatura do ambiente está ok – 4 horas atrás
         </Text>
       </View>
+      </TouchableOpacity>
 
       <View style={{ height: 60 }} />
       </ScrollView>
