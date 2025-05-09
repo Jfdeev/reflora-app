@@ -11,7 +11,16 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 28,
         fontWeight: '700',
+        textAlign: 'center',
         color: '#1B3A34',
+    },
+    input: {
+        height: 50,
+        borderColor: '#1B3A34',
+        borderWidth: 2,
+        borderRadius: 10,
+        paddingHorizontal: 10,
+        marginVertical: 20,
     }
 })
 
