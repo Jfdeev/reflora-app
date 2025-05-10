@@ -15,11 +15,11 @@ export default function DataScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Dados</Text>
+      <Text style={styles.text}>Dados do Cultivo</Text>
 
       <RNPickerSelect
         placeholder={{
-          label: 'Selecione uma cultura',
+          label: 'Tipo de cultura',
           value: null,
           color: 'black'
         }}
@@ -67,6 +67,21 @@ export default function DataScreen() {
           },
         }}
       />
-    </View>
+
+        <View style={styles.cardContainer}>
+          <View style={[styles.card, { backgroundColor: '#33582B' }]}>
+            <Text style={styles.cardText}>ph: 6.5</Text>
+          </View>
+          <View style={[styles.card, { backgroundColor: '#33582B' }]}>
+            <Text style={styles.cardText}>Índice de Sombreamento: 87%</Text>
+          </View>
+          <View style={[styles.card, { backgroundColor: '#33582B' }]}>
+            <Text style={styles.cardText}>Umidade do solo: 67%%</Text>
+          </View>
+          <View style={[styles.card, { backgroundColor: '#33582B' }]}>
+            <Text style={styles.cardText}>Nutrientes do solo: Bom</Text>
+          </View>
+        </View> 
+      </View>
   );
 }

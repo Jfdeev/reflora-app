@@ -7,6 +7,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingTop: 40,
         paddingBottom: 60, 
+        justifyContent: 'center', // Center content vertically
+        alignItems: 'center', // Center content horizontally
     },
     text: {
         fontSize: 28,
@@ -21,7 +23,26 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         paddingHorizontal: 10,
         marginVertical: 20,
+    },
+    cardContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+    },
+    card: {
+        width: '45%', 
+        height: 100,
+        margin: '2.5%',
+        padding: 10,
+        borderRadius: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    cardText: {
+        color: '#FFFFFF',
+        fontSize: 16,
+        textAlign: 'center',
     }
-})
+});
 
 export default styles;
