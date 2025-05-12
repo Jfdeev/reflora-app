@@ -7,8 +7,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingTop: 40,
         paddingBottom: 60, 
-        justifyContent: 'center', // Center content vertically
-        alignItems: 'center', // Center content horizontally
+        justifyContent: 'center', 
+        alignItems: 'center', 
     },
     text: {
         fontSize: 28,
@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'center',
+        marginTop: 20,
     },
     card: {
         width: '45%', 
@@ -42,7 +43,18 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
         fontSize: 16,
         textAlign: 'center',
-    }
+    },
+    chartPlaceholder: {
+        marginTop: 10,
+        backgroundColor: '#fff',
+        borderRadius: 12,
+        height: 180,
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+      chartText: {
+        color: '#999',
+      },
 });
 
 export default styles;

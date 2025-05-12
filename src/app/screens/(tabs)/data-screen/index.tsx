@@ -72,7 +72,7 @@ export default function DataScreen() {
           <View style={[styles.card, { backgroundColor: '#33582B' }]}>
             <Text style={styles.cardText}>ph: 6.5</Text>
           </View>
-          <View style={[styles.card, { backgroundColor: '#33582B' }]}>
+          <View style={[styles.card, { backgroundColor: '#CC5050' }]}>
             <Text style={styles.cardText}>Índice de Sombreamento: 87%</Text>
           </View>
           <View style={[styles.card, { backgroundColor: '#33582B' }]}>
@@ -81,7 +81,19 @@ export default function DataScreen() {
           <View style={[styles.card, { backgroundColor: '#33582B' }]}>
             <Text style={styles.cardText}>Nutrientes do solo: Bom</Text>
           </View>
+          <View style={[styles.card, { backgroundColor: '#CCAD2D' }]}>
+            <Text style={styles.cardText}>Umidade do ar 55%</Text>
+          </View>
+          <View style={[styles.card, { backgroundColor: '#CCAD2D' }]}>
+            <Text style={styles.cardText}>Temperatura 27º</Text>
+          </View>
         </View> 
+
+        <View style={styles.chartPlaceholder}>
+          {/* Aqui vamos inserir componente de gráfico,
+              ex: react-native-chart-kit ou react-native-svg-charts */}
+          <Text style={styles.chartText}>[Gráfico de exemplo]</Text>
+        </View>
       </View>
   );
 }
