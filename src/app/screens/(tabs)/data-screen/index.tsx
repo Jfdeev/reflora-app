@@ -76,7 +76,7 @@ export default function DataScreen() {
             <Text style={styles.cardText}>Índice de Sombreamento: 87%</Text>
           </View>
           <View style={[styles.card, { backgroundColor: '#33582B' }]}>
-            <Text style={styles.cardText}>Umidade do solo: 67%%</Text>
+            <Text style={styles.cardText}>Umidade do solo: 67%</Text>
           </View>
           <View style={[styles.card, { backgroundColor: '#33582B' }]}>
             <Text style={styles.cardText}>Nutrientes do solo: Bom</Text>
