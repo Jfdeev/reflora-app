@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Keyboard, TouchableWithoutFeedback } from 'react-native';
-import styles from './registerStyles';
-import { Formik } from 'formik';
-import { registerSchema } from '../../validations/validationSchemas';
 import { MaterialIcons } from '@expo/vector-icons';
 import { router, useRouter } from 'expo-router';
+import { Formik } from 'formik';
+import React from 'react';
+import { Keyboard, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import { registerSchema } from '../../validations/validationSchemas';
+import styles from './registerStyles';
 
 export const unstable_settings = {
     headerShown: true,
@@ -44,8 +44,37 @@ export default function RegisterScreen() {
                 <Formik
                 initialValues={{ firstName: '', lastName: '', email: '', password: '', confirmPassword: '' }}
                 validationSchema={registerSchema}
-                onSubmit={(values) => {
-                  router.push('/screens/sensor-register');
+                onSubmit={async (values, {setSubmitting}) => {
+                  try {
+                    const response = await fetch('http://192.168.0.12:3000/api/register', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            name: values.firstName + ' ' + values.lastName,
+                            email: values.email,
+                            password: values.password,
+                        }),
+                    })
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(data.message || 'Erro ao fazer registro');
+                    }
+
+                    alert('Cadastro realizado com sucesso!');
+                    router.push('/screens/home');
+                  } catch (error) {
+                    if(error instanceof Error) {
+                        alert(error.message);
+                    } else {
+                        alert('Ocorreu um erro desconhecido.');
+                    }
+                  } finally {
+                    setSubmitting(false);
+                  }
                 }}
               > 
               {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (

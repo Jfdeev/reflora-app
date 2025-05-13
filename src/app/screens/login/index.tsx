@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Keyboard, TouchableWithoutFeedback } from 'react-native';
-import styles from './loginStyles';
 import { MaterialIcons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import { Formik } from 'formik';
+import React from 'react';
+import { Keyboard, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import { loginSchema } from '../../validations/validationSchemas';
+import styles from './loginStyles';
 const router = useRouter();
 
 export default function LoginScreen() {
@@ -29,9 +30,43 @@ export default function LoginScreen() {
         <Formik
         initialValues={{ email: '', password: '' }}
         validationSchema={loginSchema}
-        onSubmit={(values) => {
-          router.push('/screens/(tabs)/home');
-        }}
+        onSubmit={async (values, {setSubmitting}) => {
+            try {
+              const response = await fetch('http://192.168.0.12:3000/api/login', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  email: values.email,
+                  password: values.password,
+                }),
+              });
+
+              const data = await response.json();
+
+              if(!response.ok) {
+                throw new Error(data.message || 'Erro ao fazer login');
+              }
+
+              if (data.token) {
+                // Armazena o token no AsyncStorage
+                await AsyncStorage.setItem('token', data.token);
+                router.push('/screens/(tabs)/home');
+              } else {
+                alert('Login falhou. Tente novamente.');
+              }
+            } catch (error) {
+              if (error instanceof Error) {
+                alert(error.message);
+              } else {
+                alert('An unknown error occurred.');
+              }
+            } finally {
+              setSubmitting(false);
+            }
+          }
+        }
       >
          {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
             <>
