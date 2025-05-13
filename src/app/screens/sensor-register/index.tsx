@@ -1,9 +1,13 @@
-import React, { useState, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, Keyboard, TouchableWithoutFeedback
+import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
+import React, { useRef, useState } from 'react';
+import {
+  Alert, Keyboard,
+  Text, TextInput, TouchableOpacity,
+  TouchableWithoutFeedback,
+  View
 } from 'react-native';
 import styles from './sensorStyles';
-import { useRouter } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
 
 export default function SensorRegisterScreen() {
   const [code, setCode] = useState(['', '', '', '']);

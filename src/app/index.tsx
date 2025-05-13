@@ -1,7 +1,7 @@
-import { useEffect } from 'react';
-import { View, Image, StyleSheet, Text } from 'react-native';
-import { useRouter } from 'expo-router';
 import { useFonts } from 'expo-font';
+import { useRouter } from 'expo-router';
+import { useEffect } from 'react';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import 'react-native-gesture-handler';
 
 
@@ -33,7 +33,7 @@ export default function SplashScreen() {
         style={styles.logo}
         resizeMode="contain"
       />
-      <Text style={styles.text}>R E F L O R A</Text>
+      <Text style={styles.text}>REFLORA</Text>
     </View>
   );
 }
