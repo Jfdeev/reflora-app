@@ -46,7 +46,7 @@ export default function RegisterScreen() {
                 validationSchema={registerSchema}
                 onSubmit={async (values, {setSubmitting}) => {
                   try {
-                    const response = await fetch('http://192.168.0.12:3000/api/register', {
+                    const response = await fetch('http://10.89.3.116:3000/api/register', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

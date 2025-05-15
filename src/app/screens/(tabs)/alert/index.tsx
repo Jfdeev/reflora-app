@@ -24,7 +24,7 @@ export default function NotificationsScreen() {
   const fetchAlerts = async () => {
     try {
       const token = await AsyncStorage.getItem('token');
-      const response = await fetch('http://192.168.0.12:3000/api/sensor/10/alerts', {
+      const response = await fetch('http://10.89.3.116:3000/api/sensor/10/alerts', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

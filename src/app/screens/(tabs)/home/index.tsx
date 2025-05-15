@@ -14,7 +14,7 @@ export default function HomeScreen() {
       </View>
 
       <View style={styles.actions}>
-        <TouchableOpacity style={styles.actionItem}>
+        <TouchableOpacity style={styles.actionItem} onPress={() => router.push('/screens/sensor-register')}>
           <View style={styles.iconCircle}>
             <MaterialIcons name="add" size={20} color="#1B3A34" />
           </View>
