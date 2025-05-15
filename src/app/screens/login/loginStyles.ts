@@ -7,10 +7,10 @@ const styles = StyleSheet.create({
       justifyContent: 'flex-start', 
       padding: 20,
       paddingTop: 50,
-      backgroundColor: '#EFEAD7',
+      backgroundColor: '#e5d3b1',
     },
     title: {
-      color: '#0B3824',
+      color: '#0e3b22',
       fontSize: 36,
       fontWeight: 'bold',
       marginBottom: 120, 

@@ -7,7 +7,7 @@ import styles from '../../../styles/homeStyle';
 const router = useRouter();
 export default function HomeScreen() {
   return (
-    <View style={{flex: 1, backgroundColor: '#EFEAD7'}}>
+    <View style={{flex: 1, backgroundColor: '#e5d3b1'}}>
       <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Início</Text>

@@ -4,7 +4,7 @@ import { StyleSheet } from 'react-native';
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#EFEAD7',
+    backgroundColor: '#e5d3b1',
     padding: 20,
     paddingTop: 50,
   },
@@ -17,7 +17,7 @@ export default StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#1B3A34',
+    color: '#0e3b22',
   },
   notifications: {
     gap: 15,

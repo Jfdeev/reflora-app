@@ -29,7 +29,7 @@ export default function DataScreen() {
     const fetchSensorData = async () => {
       const token = await AsyncStorage.getItem('token');
       try {
-        const response = await fetch('http://10.89.3.116:3000/api/sensors/10/data/5', {
+        const response = await fetch('http://192.168.15.9:3000/api/sensors/10/data/5', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

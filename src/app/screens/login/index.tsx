@@ -32,39 +32,42 @@ export default function LoginScreen() {
         validationSchema={loginSchema}
         onSubmit={async (values, {setSubmitting}) => {
             try {
-              const response = await fetch('http://10.89.3.116:3000/api/login', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  email: values.email,
-                  password: values.password,
-                }),
-              });
+        const response = await fetch('http://192.168.15.9:3000/api/login', {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+        email: values.email,
+        password: values.password,
+    }),
+  });
 
-              const data = await response.json();
+        const data = await response.json();
 
-              if(!response.ok) {
-                throw new Error(data.message || 'Erro ao fazer login');
-              }
+        if (!response.ok) {
+        throw new Error(data.message || 'Erro ao fazer login');
+  }
 
-              if (data.token) {
-                // Armazena o token no AsyncStorage
-                await AsyncStorage.setItem('token', data.token);
-                router.push('/screens/(tabs)/home');
-              } else {
-                alert('Login falhou. Tente novamente.');
-              }
-            } catch (error) {
-              if (error instanceof Error) {
-                alert(error.message);
-              } else {
-                alert('An unknown error occurred.');
-              }
-            } finally {
-              setSubmitting(false);
-            }
+        if (data.token) {
+        // Salva token, nome e email no AsyncStorage
+        await AsyncStorage.setItem('token', data.token);
+        await AsyncStorage.setItem('name', data.name);   // Certifique-se que backend retorna isso
+        await AsyncStorage.setItem('email', data.email); // Certifique-se que backend retorna isso
+
+        router.push('/screens/(tabs)/home');
+  } else {
+        alert('Login falhou. Tente novamente.');
+  }
+} catch (error) {
+    if (error instanceof Error) {
+        alert(error.message);
+  } else {
+        alert('Ocorreu um erro desconhecido.');
+  }
+} finally {
+  setSubmitting(false);
+}
           }
         }
       >
