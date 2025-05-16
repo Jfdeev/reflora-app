@@ -9,7 +9,7 @@ export default function SplashScreen() {
   const router = useRouter();
 
   const [fontsLoaded] = useFonts({
-    PixelFont: require('@/src/assets/fonts/PixelGameFont.ttf'),
+    PixelFont: require('@/src/assets/fonts/Pixel-Emulator.ttf'),
   });
 
   useEffect(() => {

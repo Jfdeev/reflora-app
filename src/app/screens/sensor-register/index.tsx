@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import React, { useRef, useState } from 'react';
 import {
@@ -30,12 +31,44 @@ export default function SensorRegisterScreen() {
     Alert.alert('Ajuda', 'A chave do sensor está na parte de baixo do seu dispositivo.');
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const key = code.join('');
-    if (key.length === 4) {
-      router.push('/screens/home');
-    } else {
+    if (key.length !== 4) {
       Alert.alert('Erro', 'Digite os 4 dígitos da chave.');
+      return;
+    }
+  
+    const numericKey = parseInt(key, 10);
+
+    if (isNaN(numericKey)) {
+      Alert.alert('Erro', 'Chave inválida.');
+      return;
+    }
+    
+    try {
+      const token = await AsyncStorage.getItem('token');
+  
+      if (!token) {
+        Alert.alert('Erro', 'Usuário não autenticado.');
+        return;
+      }
+  
+      const response = await fetch(`http://192.168.15.9:3000/api/sensors/${numericKey}/assign`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Erro ao registrar sensor');
+      }
+  
+      Alert.alert('Sucesso', 'Sensor registrado com sucesso!');
+      router.push('/screens/home');
+    } catch (error: any) {
+      Alert.alert('Erro', error.message || 'Não foi possível registrar o sensor.');
     }
   };
 

@@ -5,6 +5,7 @@ import React from 'react';
 import { Keyboard, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import { registerSchema } from '../../validations/validationSchemas';
 import styles from './registerStyles';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const unstable_settings = {
     headerShown: true,
@@ -45,37 +46,45 @@ export default function RegisterScreen() {
                 initialValues={{ firstName: '', lastName: '', email: '', password: '', confirmPassword: '' }}
                 validationSchema={registerSchema}
                 onSubmit={async (values, {setSubmitting}) => {
-                  try {
-                    const response = await fetch('http://26.251.7.105:3000/api/register', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            name: values.firstName + ' ' + values.lastName,
-                            email: values.email,
-                            password: values.password,
-                        }),
-                    })
 
-                    const data = await response.json();
+                   try {
+    const response = await fetch('http://192.168.15.9:3000/api/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: values.firstName + ' ' + values.lastName,
+        email: values.email,
+        password: values.password,
+      }),
+    });
 
-                    if (!response.ok) {
-                        throw new Error(data.message || 'Erro ao fazer registro');
-                    }
+    const data = await response.json();
 
-                    alert('Cadastro realizado com sucesso!');
-                    router.push('/screens/home');
-                  } catch (error) {
-                    if(error instanceof Error) {
-                        alert(error.message);
-                    } else {
-                        alert('Ocorreu um erro desconhecido.');
-                    }
-                  } finally {
-                    setSubmitting(false);
-                  }
-                }}
+    if (!response.ok) {
+      throw new Error(data.message || 'Erro ao fazer registro');
+    }
+
+    if (data.token) {
+      await AsyncStorage.setItem('token', data.token);
+      await AsyncStorage.setItem('name', data.name);
+      await AsyncStorage.setItem('email', data.email);
+      router.push('/screens/(tabs)/home'); // redireciona após salvar os dados
+    } else {
+      alert('Falha no cadastro. Tente novamente.');
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      alert(error.message);
+    } else {
+      alert('Ocorreu um erro desconhecido.');
+    }
+  } finally {
+    setSubmitting(false);
+  }
+}}
+
               > 
               {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
                 <> 

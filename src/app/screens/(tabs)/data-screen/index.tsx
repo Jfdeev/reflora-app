@@ -39,14 +39,21 @@ export default function DataScreen() {
   const [selectedSensorId, setSelectedSensorId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchUserSensors = async () => {
-    const token = await AsyncStorage.getItem('token');
-    if (!token) return;
-    const res = await fetch(`${API_BASE}/sensors`, { headers: { Authorization: `Bearer ${token}` } });
-    const list: UserSensor[] = await res.json();
-    if (res.ok && list.length) setSelectedSensorId(list[0].sensorId);
-    setUserSensors(list);
-  };
+
+  useEffect(() => {
+    const fetchSensorData = async () => {
+      const token = await AsyncStorage.getItem('token');
+      try {
+        const response = await fetch('http://192.168.15.9:3000/api/sensors/10/data/5', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        const responseData = await response.json();
+
 
   const fetchSensorData = async (sensorId: number) => {
     const token = await AsyncStorage.getItem('token');

@@ -7,14 +7,14 @@ import styles from '../../../styles/homeStyle';
 const router = useRouter();
 export default function HomeScreen() {
   return (
-    <View style={{flex: 1, backgroundColor: '#EFEAD7'}}>
+    <View style={{flex: 1, backgroundColor: '#e5d3b1'}}>
       <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Início</Text>
       </View>
 
       <View style={styles.actions}>
-        <TouchableOpacity style={styles.actionItem}>
+        <TouchableOpacity style={styles.actionItem} onPress={() => router.push('/screens/sensor-register')}>
           <View style={styles.iconCircle}>
             <MaterialIcons name="add" size={20} color="#1B3A34" />
           </View>

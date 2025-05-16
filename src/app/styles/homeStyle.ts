@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
     title: {
       fontSize: 28,
       fontWeight: '700',
-      color: '#1B3A34',
+      color: '#0e3b22',
     },
     actions: {
       marginTop: 30,
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     },
     alertBox: {
       marginTop: 10,
-      backgroundColor: '#1B3A34',
+      backgroundColor: '#0e3b22',
       borderRadius: 12,
       padding: 15,
       flexDirection: 'row',
