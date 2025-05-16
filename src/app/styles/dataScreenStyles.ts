@@ -1,6 +1,7 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
+
     container: {
         flex: 1,
         backgroundColor: '#e5d3b1',
@@ -55,6 +56,6 @@ const styles = StyleSheet.create({
       chartText: {
         color: '#999',
       },
-});
+
 
 export default styles;

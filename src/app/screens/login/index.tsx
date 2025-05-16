@@ -32,6 +32,7 @@ export default function LoginScreen() {
         validationSchema={loginSchema}
         onSubmit={async (values, {setSubmitting}) => {
             try {
+
         const response = await fetch('http://192.168.15.9:3000/api/login', {
         method: 'POST',
         headers: {
@@ -42,6 +43,7 @@ export default function LoginScreen() {
         password: values.password,
     }),
   });
+
 
         const data = await response.json();
 

@@ -46,6 +46,7 @@ export default function RegisterScreen() {
                 initialValues={{ firstName: '', lastName: '', email: '', password: '', confirmPassword: '' }}
                 validationSchema={registerSchema}
                 onSubmit={async (values, {setSubmitting}) => {
+
                    try {
     const response = await fetch('http://192.168.15.9:3000/api/register', {
       method: 'POST',
@@ -83,6 +84,7 @@ export default function RegisterScreen() {
     setSubmitting(false);
   }
 }}
+
               > 
               {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
                 <> 
