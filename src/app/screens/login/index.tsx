@@ -13,7 +13,7 @@ export default function LoginScreen() {
   const dismissKeyboard = () => {
     Keyboard.dismiss();
   };
-  
+
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
       <View style={styles.container}>
@@ -26,85 +26,84 @@ export default function LoginScreen() {
         </TouchableOpacity>
 
         <Text style={styles.title}>Login</Text>
-        
+
         <Formik
-        initialValues={{ email: '', password: '' }}
-        validationSchema={loginSchema}
-        onSubmit={async (values, {setSubmitting}) => {
+          initialValues={{ email: '', password: '' }}
+          validationSchema={loginSchema}
+          onSubmit={async (values, { setSubmitting }) => {
             try {
 
-        const response = await fetch('http://192.168.15.9:3000/api/login', {
-        method: 'POST',
-        headers: {
-        'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-        email: values.email,
-        password: values.password,
-    }),
-  });
+              const response = await fetch('http://26.251.7.105:3000/api/login', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  email: values.email,
+                  password: values.password,
+                }),
+              });
 
+              const data = await response.json();
 
-        const data = await response.json();
+              if (!response.ok) {
+                throw new Error(data.message || 'Erro ao fazer login');
+              }
 
-        if (!response.ok) {
-        throw new Error(data.message || 'Erro ao fazer login');
-  }
+              if (data.token) {
+                // Salva token, nome e email no AsyncStorage
+                await AsyncStorage.setItem('token', data.token);
+                await AsyncStorage.setItem('name', data.name);   // Certifique-se que backend retorna isso
+                await AsyncStorage.setItem('email', data.email); // Certifique-se que backend retorna isso
 
-        if (data.token) {
-        // Salva token, nome e email no AsyncStorage
-        await AsyncStorage.setItem('token', data.token);
-        await AsyncStorage.setItem('name', data.name);   // Certifique-se que backend retorna isso
-        await AsyncStorage.setItem('email', data.email); // Certifique-se que backend retorna isso
-
-        router.push('/screens/(tabs)/home');
-  } else {
-        alert('Login falhou. Tente novamente.');
-  }
-} catch (error) {
-    if (error instanceof Error) {
-        alert(error.message);
-  } else {
-        alert('Ocorreu um erro desconhecido.');
-  }
-} finally {
-  setSubmitting(false);
-}
+                router.push('/screens/(tabs)/home');
+              } else {
+                alert('Login falhou. Tente novamente.');
+              }
+            } catch (error) {
+              if (error instanceof Error) {
+                alert(error.message);
+              } else {
+                alert('Ocorreu um erro desconhecido.');
+              }
+            } finally {
+              setSubmitting(false);
+            }
           }
-        }
-      >
-         {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+          }
+        >
+          {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
             <>
-        <Text style={styles.label}>Email</Text>
-        <TextInput
-          placeholder="name@example.com"
-          style={styles.input}
-          placeholderTextColor="#999"
-          value={values.email}
-          onChangeText={handleChange('email')}
-          keyboardType="email-address"
-          autoCapitalize="none"
-          onBlur={handleBlur('email')}
-        />
-         {touched.email && errors.email && <Text style={styles.error}>{errors.email}</Text>}
+              <Text style={styles.label}>Email</Text>
+              <TextInput
+                placeholder="name@example.com"
+                style={styles.input}
+                placeholderTextColor="#999"
+                value={values.email}
+                onChangeText={handleChange('email')}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                onBlur={handleBlur('email')}
+              />
+              {touched.email && errors.email && <Text style={styles.error}>{errors.email}</Text>}
 
-        <Text style={styles.label}>Senha</Text>
-        <TextInput
-          placeholder="Senha"
-          style={styles.input}
-          placeholderTextColor="#999"
-          secureTextEntry
-          value={values.password}
-          onChangeText={handleChange('password')}
-          onBlur={handleBlur('password')}
-        />
-        {touched.password && errors.password && <Text style={styles.error}>{errors.password}</Text>}
+              <Text style={styles.label}>Senha</Text>
+              <TextInput
+                placeholder="Senha"
+                style={styles.input}
+                placeholderTextColor="#999"
+                secureTextEntry
+                value={values.password}
+                onChangeText={handleChange('password')}
+                onBlur={handleBlur('password')}
+              />
+              {touched.password && errors.password && <Text style={styles.error}>{errors.password}</Text>}
 
-        <TouchableOpacity style={styles.button} onPress={() => handleSubmit()}>
-          
-          <Text style={styles.buttonText}>Entrar</Text>
-        </TouchableOpacity>
-        </>
+              <TouchableOpacity style={styles.button} onPress={() => handleSubmit()}>
+
+                <Text style={styles.buttonText}>Entrar</Text>
+              </TouchableOpacity>
+            </>
           )}
         </Formik>
 

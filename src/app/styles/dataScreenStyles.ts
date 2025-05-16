@@ -1,61 +1,87 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: '#e5d3b1',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#33582B',
+    textAlign: 'center',
+    marginBottom: 12,
+  },
+  pickerIOS: {
+    fontSize: 16,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 4,
+    color: '#333',
+    paddingRight: 30,
+    marginBottom: 20,
+  },
+  pickerAndroid: {
+    fontSize: 16,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 4,
+    color: '#333',
+    paddingRight: 30,
+    marginBottom: 20,
+  },
 
-    container: {
-        flex: 1,
-        backgroundColor: '#e5d3b1',
-        paddingHorizontal: 20,
-        paddingTop: 40,
-        paddingBottom: 60, 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-    },
-    text: {
-        fontSize: 28,
-        fontWeight: '700',
-        textAlign: 'center',
-        color: '#1B3A34',
-    },
-    input: {
-        height: 50,
-        borderColor: '#1B3A34',
-        borderWidth: 2,
-        borderRadius: 10,
-        paddingHorizontal: 10,
-        marginVertical: 20,
-    },
-    cardContainer: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        justifyContent: 'center',
-        marginTop: 20,
-    },
-    card: {
-        width: '45%', 
-        height: 100,
-        margin: '2.5%',
-        padding: 10,
-        borderRadius: 10,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    cardText: {
-        color: '#FFFFFF',
-        fontSize: 16,
-        textAlign: 'center',
-    },
-    chartPlaceholder: {
-        marginTop: 10,
-        backgroundColor: '#fff',
-        borderRadius: 12,
-        height: 180,
-        justifyContent: 'center',
-        alignItems: 'center',
-      },
-      chartText: {
-        color: '#999',
-      },
+  // Grid dos cards
+  cardGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    marginTop: 20,
+  },
+  cardWrapper: {
+    width: '48%',        // dois cards lado a lado
+    height: 120,         // altura maior
+    marginBottom: 16,
+  },
+  card: {
+    flex: 1,
+    borderRadius: 12,
+    padding: 16,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+  },
+  cardTextLabel: {
+    color: '#fff',
+    fontSize: 14,
+    marginBottom: 4,
+  },
+  cardTextValue: {
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+
+  chartPlaceholder: {
+    height: 180,
+    borderRadius: 12,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  chartText: {
+    color: '#999',
+  },
+  chartContainer: {
+  marginTop: 24,
+  alignItems: 'center',
+  justifyContent: 'center',
+},
+});
 
 
 export default styles;

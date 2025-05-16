@@ -48,7 +48,7 @@ export default function RegisterScreen() {
                 onSubmit={async (values, {setSubmitting}) => {
 
                    try {
-    const response = await fetch('http://192.168.15.9:3000/api/register', {
+    const response = await fetch('http://26.251.7.105:3000/api/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -5,6 +5,7 @@ import { Text, View, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import RNPickerSelect from 'react-native-picker-select';
 import styles from '../../../styles/dataScreenStyles';
+import { BarChart } from 'react-native-chart-kit';
 
 interface SensorData {
   sensorDataId: number;
@@ -40,21 +41,6 @@ export default function DataScreen() {
   const [loading, setLoading] = useState(true);
 
 
-  useEffect(() => {
-    const fetchSensorData = async () => {
-      const token = await AsyncStorage.getItem('token');
-      try {
-        const response = await fetch('http://192.168.15.9:3000/api/sensors/10/data/5', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-
-        const responseData = await response.json();
-
-
   const fetchSensorData = async (sensorId: number) => {
     const token = await AsyncStorage.getItem('token');
     if (!token) return;
@@ -62,6 +48,16 @@ export default function DataScreen() {
     const arr: SensorData[] = await res.json();
     if (res.ok && arr.length) setSensorData(arr[arr.length - 1]);
     else setSensorData(null);
+  };
+
+  // Fetch the user's sensors from the API
+  const fetchUserSensors = async () => {
+    const token = await AsyncStorage.getItem('token');
+    if (!token) return;
+    const res = await fetch(`${API_BASE}/sensors`, { headers: { Authorization: `Bearer ${token}` } });
+    const arr: UserSensor[] = await res.json();
+    if (res.ok && arr.length) setUserSensors(arr);
+    else setUserSensors([]);
   };
 
   useEffect(() => {
@@ -106,6 +102,7 @@ export default function DataScreen() {
         }}
       />
 
+
       <View style={styles.cardGrid}>
         {[
           { label: `PH`, value: sensorData?.ph.toFixed(2), color: '#33582B', metric: 'ph' as Metric },
@@ -116,7 +113,7 @@ export default function DataScreen() {
           { label: 'Temperatura', value: sensorData?.temperature.toFixed(2) + 'ºC', color: '#CCAD2D', metric: 'temperature' as Metric },
         ].map((item) => (
           <Pressable key={item.metric} style={[styles.cardWrapper]} onPress={() => openDetail(item.metric)}>
-            <View style={[styles.card, { backgroundColor: item.color }]}>  
+            <View style={[styles.card, { backgroundColor: item.color }]}>
               <Text style={styles.cardTextLabel}>{item.label}:</Text>
               <Text style={styles.cardTextValue}>{item.value ?? 'N/A'}</Text>
             </View>
@@ -124,9 +121,51 @@ export default function DataScreen() {
         ))}
       </View>
 
-      <View style={styles.chartPlaceholder}>
-        <Text style={styles.chartText}>[Gráfico de exemplo]</Text>
-      </View>
+      {sensorData && (
+        <View style={styles.chartContainer}>
+          <BarChart
+        data={{
+          labels: [
+            'PH',
+            'Sombreamento',
+            'Solo',
+            'Ar',
+            'Temp'
+          ],
+          datasets: [
+            {
+          data: [
+            sensorData.ph,
+            sensorData.shadingIndex,
+            sensorData.soilHumidity,
+            sensorData.airHumidity,
+            sensorData.temperature,
+          ],
+            },
+          ],
+        }}
+        width={350}
+        height={220}
+        yAxisLabel=""
+        yAxisSuffix=""
+        chartConfig={{
+          backgroundColor: '#fff',
+          backgroundGradientFrom: '#fff',
+          backgroundGradientTo: '#fff',
+          decimalPlaces: 2,
+          color: (opacity = 1) => `rgba(51, 88, 43, ${opacity})`,
+          labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+          style: {
+            borderRadius: 16,
+          },
+        }}
+        style={{
+          marginVertical: 8,
+          borderRadius: 16,
+        }}
+          />
+        </View>
+      )}
     </View>
   );
 }
