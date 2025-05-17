@@ -53,7 +53,7 @@ export default function SensorRegisterScreen() {
         return;
       }
   
-      const response = await fetch(`http://26.251.7.105:3000/api/sensors/${numericKey}/assign`, {
+      const response = await fetch(`http://192.168.0.12:3000/api/sensors/${numericKey}/assign`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -66,7 +66,7 @@ export default function SensorRegisterScreen() {
       }
   
       Alert.alert('Sucesso', 'Sensor registrado com sucesso!');
-      router.push('/screens/home');
+      router.push(`/screens/fill-sensor-settings?sensorId=${numericKey}`);
     } catch (error: any) {
       Alert.alert('Erro', error.message || 'Não foi possível registrar o sensor.');
     }
