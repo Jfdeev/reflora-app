@@ -1,0 +1,106 @@
+import { MaterialIcons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { Formik } from 'formik';
+import React from 'react';
+import { Alert, Keyboard, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import styles from './fill-sensor-settings';
+
+export default function FillSensorSettingsScreen() {
+
+  const router = useRouter();
+  const params = useLocalSearchParams();
+  
+  
+  //esse dimissKeyboard fiz p quando o usuário clicar na tela, ele sair da caixa de texto, como tem normalmente em outros apps. 
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
+
+  return (
+    <TouchableWithoutFeedback onPress={dismissKeyboard}>
+      <View style={styles.container}>
+
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => router.back()}
+        >
+          <MaterialIcons name="arrow-back" size={32} color="#000" />
+        </TouchableOpacity>
+
+        <Text style={styles.title}>Sensor</Text>
+        <Text style={styles.text}>Agora preencha as informações do seu sensor e seja bem vindo!</Text>
+
+        <Formik
+          initialValues={{ name: '', location: '' }}
+          onSubmit={async (values, { setSubmitting }) => {
+            try {
+              const sensorId = params.sensorId;
+              const token = await AsyncStorage.getItem('token');
+              
+              if (!token) {
+                Alert.alert('Erro', 'Usuário não autenticado.');
+                return;
+              }
+              const response = await fetch(`http://192.168.0.12:3000/api/sensors/${sensorId}`, {
+                method: 'PUT',
+                headers: {
+                  'Authorization': `Bearer ${token}`,
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  sensorName: values.name,
+                  location: values.location,
+                }),
+              });
+              router.push('/screens/(tabs)/home');
+            } catch (error) {
+              if (error instanceof Error) {
+                alert(error.message);
+              } else {
+                alert('Ocorreu um erro desconhecido.');
+              }
+            } finally {
+              setSubmitting(false);
+            }
+          }
+          }
+        >
+          {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+            <>
+              <Text style={styles.label}>Nome</Text>
+              <TextInput
+                placeholder="Sensor 1"
+                style={styles.input}
+                placeholderTextColor="#999"
+                value={values.name}
+                onChangeText={handleChange('name')}
+                keyboardType="default"
+                autoCapitalize="none"
+                onBlur={handleBlur('name')}
+              />
+              {touched.name && errors.name && <Text style={styles.error}>{errors.name}</Text>}
+
+              <Text style={styles.label}>Localização</Text>
+              <TextInput
+                placeholder="Seção 1"
+                style={styles.input}
+                placeholderTextColor="#999"
+                value={values.location}
+                onChangeText={handleChange('location')}
+                onBlur={handleBlur('location')}
+              />
+              {touched.location && errors.location && <Text style={styles.error}>{errors.location}</Text>}
+
+              <TouchableOpacity style={styles.button} onPress={() => handleSubmit()}>
+
+                <Text style={styles.buttonText}>Cadastrar</Text>
+              </TouchableOpacity>
+            </>
+          )}
+        </Formik>
+
+      </View>
+    </TouchableWithoutFeedback>
+  );
+}

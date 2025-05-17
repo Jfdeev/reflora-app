@@ -1,20 +1,21 @@
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useEffect, useState } from 'react';
-import { Text, View, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { Pressable, Text, View } from 'react-native';
+import { BarChart } from 'react-native-chart-kit';
 import RNPickerSelect from 'react-native-picker-select';
 import styles from '../../../styles/dataScreenStyles';
-import { BarChart } from 'react-native-chart-kit';
 
 interface SensorData {
   sensorDataId: number;
-  ph: number;
-  shadingIndex: number;
-  airHumidity: number;
   soilHumidity: number;
-  soilNutrients: string;
   temperature: number;
+  condutivity: number;
+  ph: number;
+  nitrogen: number;
+  phosphorus: number;
+  potassium: number;
   dateTime: string;
 }
 
@@ -24,14 +25,15 @@ interface UserSensor {
 }
 
 type Metric =
-  | 'ph'
-  | 'shadingIndex'
-  | 'airHumidity'
   | 'soilHumidity'
-  | 'soilNutrients'
-  | 'temperature';
+  | 'temperature'
+  | 'condutivity'
+  | 'ph'
+  | 'nitrogen'
+  | 'phosphorus'
+  | 'potassium'
 
-const API_BASE = 'http://26.251.7.105:3000/api';
+const API_BASE = 'http://192.168.0.12:3000/api';
 
 export default function DataScreen() {
   const router = useRouter();
@@ -44,7 +46,7 @@ export default function DataScreen() {
   const fetchSensorData = async (sensorId: number) => {
     const token = await AsyncStorage.getItem('token');
     if (!token) return;
-    const res = await fetch(`${API_BASE}/sensors/${sensorId}/data`, { headers: { Authorization: `Bearer ${token}` } });
+    const res = await fetch(`${API_BASE}/sensors/${sensorId}/data`, {method:'GET', headers: { Authorization: `Bearer ${token}` } });
     const arr: SensorData[] = await res.json();
     if (res.ok && arr.length) setSensorData(arr[arr.length - 1]);
     else setSensorData(null);
@@ -54,8 +56,9 @@ export default function DataScreen() {
   const fetchUserSensors = async () => {
     const token = await AsyncStorage.getItem('token');
     if (!token) return;
-    const res = await fetch(`${API_BASE}/sensors`, { headers: { Authorization: `Bearer ${token}` } });
+    const res = await fetch(`${API_BASE}/sensors`, {method: 'GET', headers: { Authorization: `Bearer ${token}` } });
     const arr: UserSensor[] = await res.json();
+    console.log(arr);
     if (res.ok && arr.length) setUserSensors(arr);
     else setUserSensors([]);
   };
@@ -105,12 +108,13 @@ export default function DataScreen() {
 
       <View style={styles.cardGrid}>
         {[
-          { label: `PH`, value: sensorData?.ph.toFixed(2), color: '#33582B', metric: 'ph' as Metric },
-          { label: 'Índice de Sombreamento', value: sensorData?.shadingIndex.toFixed(2) + '%', color: '#CC5050', metric: 'shadingIndex' as Metric },
           { label: 'Umidade do Solo', value: sensorData?.soilHumidity.toFixed(2) + '%', color: '#33582B', metric: 'soilHumidity' as Metric },
-          { label: 'Nutrientes do Solo', value: sensorData?.soilNutrients, color: '#33582B', metric: 'soilNutrients' as Metric },
-          { label: 'Umidade do Ar', value: sensorData?.airHumidity.toFixed(2) + '%', color: '#CCAD2D', metric: 'airHumidity' as Metric },
           { label: 'Temperatura', value: sensorData?.temperature.toFixed(2) + 'ºC', color: '#CCAD2D', metric: 'temperature' as Metric },
+          { label: 'Condutividade do Solo', value: sensorData?.condutivity, color: '#33582B', metric: 'condutivity' as Metric },
+          { label: `PH`, value: sensorData?.ph.toFixed(2), color: '#33582B', metric: 'ph' as Metric },
+          { label: 'Nitrogênio', value: sensorData?.nitrogen.toFixed(2) + '%', color: '#CC5050', metric: 'nitrogen' as Metric },
+          { label: 'Fósforo', value: sensorData?.phosphorus.toFixed(2) + '%', color: '#CCAD2D', metric: 'phosphorus' as Metric },
+          { label: 'Potássio', value: sensorData?.potassium.toFixed(2) + '%', color: '#CCAD2D', metric: 'potassium' as Metric },
         ].map((item) => (
           <Pressable key={item.metric} style={[styles.cardWrapper]} onPress={() => openDetail(item.metric)}>
             <View style={[styles.card, { backgroundColor: item.color }]}>
@@ -126,20 +130,24 @@ export default function DataScreen() {
           <BarChart
         data={{
           labels: [
+            'Umidade do Solo',
+            'Temperatura',
+            'Condutividade',
             'PH',
-            'Sombreamento',
-            'Solo',
-            'Ar',
-            'Temp'
+            'Nitrogênio',
+            'Fósforo',
+            'Potássio',
           ],
           datasets: [
             {
           data: [
-            sensorData.ph,
-            sensorData.shadingIndex,
             sensorData.soilHumidity,
-            sensorData.airHumidity,
             sensorData.temperature,
+            sensorData.condutivity,
+            sensorData.ph,
+            sensorData.nitrogen,
+            sensorData.phosphorus,
+            sensorData.potassium,
           ],
             },
           ],

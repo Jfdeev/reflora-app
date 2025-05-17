@@ -1,36 +1,35 @@
-import React, { useEffect, useState } from 'react';
-import { ScrollView, View, Text, ActivityIndicator } from 'react-native';
-import { useRouter } from 'expo-router';
-import { useLocalSearchParams } from 'expo-router';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import {
-  LineChart,
-  BarChart
+  LineChart
 } from 'react-native-chart-kit'; // ou sua lib de preferência
-import styles from './dataDetailsScreen';
-import chartConfig from './dataDetailsScreen'
+import { default as chartConfig, default as styles } from './dataDetailsScreen';
 
 interface SensorDataDetail {
   sensorDataId: number;
-  ph: number;
-  shadingIndex: number;
-  airHumidity: number;
   soilHumidity: number;
-  soilNutrients: string;
   temperature: number;
+  condutivity: number;
+  ph: number;
+  nitrogen: number;
+  phosphorus: number;
+  potassium: number;
   dateTime: string;
 }
 
 type MetricKey = keyof Omit<SensorDataDetail, 'sensorDataId' | 'sensorId' | 'dateTime'>;
 
 const metricConfig: Record<MetricKey, { label: string; icon: any; unit: string }> = {
-  ph: { label: 'PH', icon: 'water', unit: '' },
-  shadingIndex: { label: 'Índice de Sombreamento', icon: 'sunny', unit: '%' },
-  airHumidity: { label: 'Umidade do Ar', icon: 'water-outline', unit: '%' },
   soilHumidity: { label: 'Umidade do Solo', icon: 'leaf', unit: '%' },
-  soilNutrients: { label: 'Nutrientes do Solo', icon: 'analytics', unit: '' },
   temperature: { label: 'Temperatura', icon: 'thermometer', unit: '°C' },
+  condutivity: { label: 'Condutividade', icon: 'water', unit: 'µS/cm' },
+  ph: { label: 'PH', icon: 'water', unit: '' },
+  nitrogen: { label: 'Nitrogênio', icon: 'leaf', unit: 'mg/L' },
+  phosphorus: { label: 'Fósforo', icon: 'leaf', unit: 'mg/L' },
+  potassium: { label: 'Potássio', icon: 'leaf', unit: 'mg/L' }
 };
 
 export default function DataDetailScreen() {
@@ -45,7 +44,7 @@ export default function DataDetailScreen() {
     async function load() {
       const token = await AsyncStorage.getItem('token');
       const res = await fetch(
-        `http://26.251.7.105:3000/api/sensors/${sensorId}/data`,
+        `http://192.168.0.12:3000/api/sensors/${sensorId}/data`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       const arr: SensorDataDetail[] = await res.json();
