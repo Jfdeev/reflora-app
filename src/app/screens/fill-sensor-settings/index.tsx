@@ -83,7 +83,7 @@ export default function FillSensorSettingsScreen() {
 
               <Text style={styles.label}>Localização</Text>
               <TextInput
-                placeholder="Seção 1"
+                placeholder="Seção 1" 
                 style={styles.input}
                 placeholderTextColor="#999"
                 value={values.location}

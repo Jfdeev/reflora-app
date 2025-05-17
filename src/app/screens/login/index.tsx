@@ -33,7 +33,7 @@ export default function LoginScreen() {
           onSubmit={async (values, { setSubmitting }) => {
             try {
 
-              const response = await fetch('http://192.168.0.12:3000/api/login', {
+              const response = await fetch('http://26.251.7.105:3000/api/login', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',

@@ -6,6 +6,7 @@ import { Pressable, Text, View } from 'react-native';
 import { BarChart } from 'react-native-chart-kit';
 import RNPickerSelect from 'react-native-picker-select';
 import styles from '../../../styles/dataScreenStyles';
+import { ScrollView } from 'react-native-gesture-handler';
 
 interface SensorData {
   sensorDataId: number;
@@ -33,7 +34,7 @@ type Metric =
   | 'phosphorus'
   | 'potassium'
 
-const API_BASE = 'http://192.168.0.12:3000/api';
+const API_BASE = 'http://26.251.7.105:3000/api';
 
 export default function DataScreen() {
   const router = useRouter();
@@ -89,6 +90,8 @@ export default function DataScreen() {
   };
 
   return (
+    <ScrollView>
+
     <View style={styles.container}>
       <Text style={styles.title}>Dados do Cultivo</Text>
 
@@ -130,13 +133,13 @@ export default function DataScreen() {
           <BarChart
         data={{
           labels: [
-            'Umidade do Solo',
-            'Temperatura',
-            'Condutividade',
+            'Umidade',
+            'Temp.',
+            'Condut.',
             'PH',
-            'Nitrogênio',
-            'Fósforo',
-            'Potássio',
+            'N',
+            'P',
+            'K',
           ],
           datasets: [
             {
@@ -152,28 +155,38 @@ export default function DataScreen() {
             },
           ],
         }}
-        width={350}
-        height={220}
+        width={340} // Ajuste para caber na tela
+        height={260}
+        fromZero
         yAxisLabel=""
         yAxisSuffix=""
         chartConfig={{
-          backgroundColor: '#fff',
-          backgroundGradientFrom: '#fff',
-          backgroundGradientTo: '#fff',
+          backgroundColor: '#F2E9D7',
+          backgroundGradientFrom: '#F2E9D7',
+          backgroundGradientTo: '#F2E9D7',
           decimalPlaces: 2,
           color: (opacity = 1) => `rgba(51, 88, 43, ${opacity})`,
           labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
           style: {
             borderRadius: 16,
           },
+          propsForLabels: {
+            fontSize: 10,
+            textAnchor: 'middle',
+          },
+          barPercentage: 0.7// barras mais finas
         }}
         style={{
           marginVertical: 8,
           borderRadius: 16,
+          alignSelf: 'center',
         }}
+        verticalLabelRotation={-15} // Rotaciona para caber melhor
+        showValuesOnTopOfBars
           />
         </View>
       )}
     </View>
+     </ScrollView>
   );
 }

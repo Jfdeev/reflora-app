@@ -44,7 +44,7 @@ export default function DataDetailScreen() {
     async function load() {
       const token = await AsyncStorage.getItem('token');
       const res = await fetch(
-        `http://192.168.0.12:3000/api/sensors/${sensorId}/data`,
+        `http://26.251.7.105:3000/api/sensors/${sensorId}/data`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       const arr: SensorDataDetail[] = await res.json();
