@@ -1,5 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from 'expo-constants';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
@@ -33,6 +34,7 @@ const metricConfig: Record<MetricKey, { label: string; icon: any; unit: string }
 };
 
 export default function DataDetailScreen() {
+  const apiUrl = Constants?.expoConfig?.extra?.apiUrl;
   const searchParams = useLocalSearchParams<{ sensorId: string; dataId: string; metric: MetricKey }>();
   const { sensorId, dataId, metric } = searchParams;
   const router = useRouter();
@@ -44,7 +46,7 @@ export default function DataDetailScreen() {
     async function load() {
       const token = await AsyncStorage.getItem('token');
       const res = await fetch(
-        `http://26.251.7.105:3000/api/sensors/${sensorId}/data`,
+        `${apiUrl}/sensors/${sensorId}/data`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       const arr: SensorDataDetail[] = await res.json();

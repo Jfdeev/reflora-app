@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, Switch, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { Switch, Text, TouchableOpacity, View } from 'react-native';
 import styles from '../../../styles/configStyles';
 
 export default function ConfigScreen() {
@@ -17,7 +17,7 @@ export default function ConfigScreen() {
 
   const handleLogout = async () => {
     await AsyncStorage.removeItem('token');
-    router.replace('/screens/login');
+    router.replace('/screens/welcome');
   };
 
   useEffect(() => {

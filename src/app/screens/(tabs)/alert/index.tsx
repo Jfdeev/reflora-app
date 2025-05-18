@@ -1,5 +1,6 @@
 import { FontAwesome } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from 'expo-constants';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
@@ -15,6 +16,7 @@ interface Alert {
 }
 
 export default function NotificationsScreen() {
+  const apiUrl = Constants?.expoConfig?.extra?.apiUrl;
   const router = useRouter();
   
   const [alerts, setAlerts] = useState<Alert[]>([]);
@@ -24,8 +26,7 @@ export default function NotificationsScreen() {
   const fetchAlerts = async () => {
     try {
       const token = await AsyncStorage.getItem('token');
-
-      const response = await fetch('http://26.251.7.105:3000/api/sensor/10/alerts', {
+      const response = await fetch(apiUrl + '/sensor/10/alerts', {
 
         method: 'GET',
         headers: {

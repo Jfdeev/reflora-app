@@ -1,12 +1,12 @@
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from 'expo-constants';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 import { BarChart } from 'react-native-chart-kit';
 import RNPickerSelect from 'react-native-picker-select';
 import styles from '../../../styles/dataScreenStyles';
-import { ScrollView } from 'react-native-gesture-handler';
 
 interface SensorData {
   sensorDataId: number;
@@ -26,17 +26,16 @@ interface UserSensor {
 }
 
 type Metric =
-  | 'soilHumidity'
-  | 'temperature'
-  | 'condutivity'
-  | 'ph'
-  | 'nitrogen'
-  | 'phosphorus'
-  | 'potassium'
-
-const API_BASE = 'http://26.251.7.105:3000/api';
+| 'soilHumidity'
+| 'temperature'
+| 'condutivity'
+| 'ph'
+| 'nitrogen'
+| 'phosphorus'
+| 'potassium';
 
 export default function DataScreen() {
+  const apiUrl = Constants?.expoConfig?.extra?.apiUrl;
   const router = useRouter();
   const [sensorData, setSensorData] = useState<SensorData | null>(null);
   const [userSensors, setUserSensors] = useState<UserSensor[]>([]);
@@ -47,7 +46,7 @@ export default function DataScreen() {
   const fetchSensorData = async (sensorId: number) => {
     const token = await AsyncStorage.getItem('token');
     if (!token) return;
-    const res = await fetch(`${API_BASE}/sensors/${sensorId}/data`, {method:'GET', headers: { Authorization: `Bearer ${token}` } });
+    const res = await fetch(`${apiUrl}/sensors/${sensorId}/data`, {method:'GET', headers: { Authorization: `Bearer ${token}` } });
     const arr: SensorData[] = await res.json();
     if (res.ok && arr.length) setSensorData(arr[arr.length - 1]);
     else setSensorData(null);
@@ -57,9 +56,8 @@ export default function DataScreen() {
   const fetchUserSensors = async () => {
     const token = await AsyncStorage.getItem('token');
     if (!token) return;
-    const res = await fetch(`${API_BASE}/sensors`, {method: 'GET', headers: { Authorization: `Bearer ${token}` } });
+    const res = await fetch(`${apiUrl}/sensors`, {method: 'GET', headers: { Authorization: `Bearer ${token}` } });
     const arr: UserSensor[] = await res.json();
-    console.log(arr);
     if (res.ok && arr.length) setUserSensors(arr);
     else setUserSensors([]);
   };
@@ -90,7 +88,7 @@ export default function DataScreen() {
   };
 
   return (
-    <ScrollView>
+    <ScrollView style={styles.scrollView}>
 
     <View style={styles.container}>
       <Text style={styles.title}>Dados do Cultivo</Text>

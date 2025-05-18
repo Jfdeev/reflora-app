@@ -1,9 +1,10 @@
 import { FontAwesome5, Ionicons, MaterialIcons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from 'expo-constants';
 import { useRouter } from 'expo-router';
 import React, { useEffect } from 'react';
 import { Modal, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import styles from '../../../styles/homeStyle';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface UserSensor {
   sensorId: number;
@@ -12,6 +13,7 @@ interface UserSensor {
 
 const router = useRouter();
 export default function HomeScreen() {
+  const apiUrl = Constants?.expoConfig?.extra?.apiUrl;
   const [showEditModal, setShowEditModal] = React.useState(false);
   const [selectedSensor, setSelectedSensor] = React.useState<UserSensor | null>(null);
   const [newName, setNewName] = React.useState('');
@@ -26,9 +28,8 @@ export default function HomeScreen() {
   const fetchUserSensors = async () => {
     const token = await AsyncStorage.getItem('token');
     if (!token) return;
-    const res = await fetch(`http://26.251.7.105:3000/api/sensors`, { method: 'GET', headers: { Authorization: `Bearer ${token}` } });
+    const res = await fetch(`${apiUrl}/sensors`, { method: 'GET', headers: { Authorization: `Bearer ${token}` } });
     const arr: UserSensor[] = await res.json();
-    console.log(arr);
     if (res.ok && arr.length) setSensors(arr);
     else setSensors([]);
   };
@@ -45,7 +46,7 @@ export default function HomeScreen() {
   const handleRemoveSensor = async (sensorId: number) => {
     const token = await AsyncStorage.getItem('token');
     if (!token) return;
-    const res = await fetch(`http://26.251.7.105:3000/api/sensors/${sensorId}`, {
+    const res = await fetch(`${apiUrl}/sensors/${sensorId}`, {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -202,7 +203,7 @@ export default function HomeScreen() {
                           const token = await AsyncStorage.getItem('token');
                           if (!token || !selectedSensor) return;
 
-                          const res = await fetch(`http://26.251.7.105:3000/api/sensors/${selectedSensor.sensorId}`, {
+                          const res = await fetch(`${apiUrl}/sensors/${selectedSensor.sensorId}`, {
                             method: 'PUT',
                             headers: {
                               'Content-Type': 'application/json',

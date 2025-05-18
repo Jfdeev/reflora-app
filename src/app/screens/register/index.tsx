@@ -1,36 +1,38 @@
 import { MaterialIcons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from 'expo-constants';
 import { router, useRouter } from 'expo-router';
 import { Formik } from 'formik';
 import React from 'react';
 import { Keyboard, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import { registerSchema } from '../../validations/validationSchemas';
 import styles from './registerStyles';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const unstable_settings = {
-    headerShown: true,
-    headerTitle: 'Registro',
-    headerLeft: () => (
-        <MaterialIcons
-            name="arrow-back"
-            size={24}
-            color="black"
-            onPress={() => router.back()}
-            style={{ marginLeft: 15 }}
-        />
-    ),
+  headerShown: true,
+  headerTitle: 'Registro',
+  headerLeft: () => (
+    <MaterialIcons
+    name="arrow-back"
+    size={24}
+    color="black"
+    onPress={() => router.back()}
+    style={{ marginLeft: 15 }}
+    />
+  ),
 };
 
 export default function RegisterScreen() {
-
-    const router = useRouter();
-
-    const dismissKeyboard = () => {
-        Keyboard.dismiss();
-    };
-
-    return (
-        <TouchableWithoutFeedback onPress={dismissKeyboard}>
+  
+  const apiUrl = Constants?.expoConfig?.extra?.apiUrl;
+  const router = useRouter();
+  
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
+  
+  return (
+    <TouchableWithoutFeedback onPress={dismissKeyboard}>
         <View style={styles.container}>
 
                 <TouchableOpacity
@@ -48,7 +50,7 @@ export default function RegisterScreen() {
                 onSubmit={async (values, {setSubmitting}) => {
 
                    try {
-    const response = await fetch('http://26.251.7.105:3000/api/register', {
+    const response = await fetch(apiUrl + '/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

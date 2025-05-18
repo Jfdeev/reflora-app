@@ -1,13 +1,17 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from 'expo-constants';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Formik } from 'formik';
 import React from 'react';
 import { Alert, Keyboard, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+
+
 import styles from './fill-sensor-settings';
 
 export default function FillSensorSettingsScreen() {
-
+  
+  const apiUrl = Constants?.expoConfig?.extra?.apiUrl;
   const router = useRouter();
   const params = useLocalSearchParams();
   
@@ -42,7 +46,7 @@ export default function FillSensorSettingsScreen() {
                 Alert.alert('Erro', 'Usuário não autenticado.');
                 return;
               }
-              const response = await fetch(`http://192.168.0.12:3000/api/sensors/${sensorId}`, {
+              const response = await fetch(apiUrl + `/sensors/${sensorId}`, {
                 method: 'PUT',
                 headers: {
                   'Authorization': `Bearer ${token}`,

@@ -6,6 +6,10 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: '#e5d3b1',
   },
+  scrollView: {
+    flexGrow: 1,
+    backgroundColor: '#e5d3b1',
+  },
   title: {
     fontSize: 24,
     fontWeight: 'bold',

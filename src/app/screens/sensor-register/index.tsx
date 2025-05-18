@@ -53,7 +53,7 @@ export default function SensorRegisterScreen() {
         return;
       }
   
-      const response = await fetch(`http://192.168.0.12:3000/api/sensors/${numericKey}/assign`, {
+      const response = await fetch(`http://192.168.0.9:3000/api/sensors/${numericKey}/assign`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`,
