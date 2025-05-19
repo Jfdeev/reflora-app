@@ -1,5 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from 'expo-constants';
 import { useRouter } from 'expo-router';
 import React, { useRef, useState } from 'react';
 import {
@@ -11,6 +12,8 @@ import {
 import styles from './sensorStyles';
 
 export default function SensorRegisterScreen() {
+  const apiUrl = Constants?.expoConfig?.extra?.apiUrl;
+  const username = AsyncStorage.getItem('name');
   const [code, setCode] = useState(['', '', '', '']);
   const inputRefs = useRef<Array<TextInput | null>>([]);
   const router = useRouter();
@@ -53,7 +56,7 @@ export default function SensorRegisterScreen() {
         return;
       }
   
-      const response = await fetch(`http://192.168.0.9:3000/api/sensors/${numericKey}/assign`, {
+      const response = await fetch(`${apiUrl}/sensors/${numericKey}/assign`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -88,7 +91,7 @@ export default function SensorRegisterScreen() {
 
         {/* Texto principal */}
         <Text style={styles.text}>
-          Seja bem vindo ao reflora <Text style={{ fontWeight: 'bold' }}>{'{Nome}'}</Text>,{'\n'}
+          Seja bem vindo ao reflora <Text style={{ fontWeight: 'bold' }}>{username}</Text>,{'\n'}
           para começar a utilizar a plataforma por favor insira a chave de acesso do seu sensor.
         </Text>
 

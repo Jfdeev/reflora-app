@@ -9,6 +9,12 @@ const styles = StyleSheet.create({
       paddingTop: 50,
       backgroundColor: '#e5d3b1',
     },
+    logo: {
+      width: 250,
+      height: 300,
+      alignSelf: 'center',
+      marginTop: 10,
+    },
     text: {
       fontSize: 22,
       color: '#000',
@@ -20,7 +26,7 @@ const styles = StyleSheet.create({
       color: '#0e3b22',
       fontSize: 36,
       fontWeight: 'bold',
-      marginBottom: 120, 
+      marginBottom: 20, 
       textAlign: 'center',
     },
     label: {

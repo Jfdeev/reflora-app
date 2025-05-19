@@ -4,9 +4,8 @@ import Constants from 'expo-constants';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Formik } from 'formik';
 import React from 'react';
-import { Alert, Keyboard, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
-
-
+import { Alert, Image, Keyboard, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import { sensorSettingsSchema } from '../../validations/validationSchemas';
 import styles from './fill-sensor-settings';
 
 export default function FillSensorSettingsScreen() {
@@ -37,6 +36,7 @@ export default function FillSensorSettingsScreen() {
 
         <Formik
           initialValues={{ name: '', location: '' }}
+          validationSchema={sensorSettingsSchema}
           onSubmit={async (values, { setSubmitting }) => {
             try {
               const sensorId = params.sensorId;
@@ -57,6 +57,12 @@ export default function FillSensorSettingsScreen() {
                   location: values.location,
                 }),
               });
+
+              if(!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Erro ao registrar sensor');
+              }
+              Alert.alert('Sucesso', 'Sensor registrado com sucesso!');
               router.push('/screens/(tabs)/home');
             } catch (error) {
               if (error instanceof Error) {
@@ -74,7 +80,7 @@ export default function FillSensorSettingsScreen() {
             <>
               <Text style={styles.label}>Nome</Text>
               <TextInput
-                placeholder="Sensor 1"
+                placeholder="Meu Sensor"
                 style={styles.input}
                 placeholderTextColor="#999"
                 value={values.name}
@@ -87,7 +93,7 @@ export default function FillSensorSettingsScreen() {
 
               <Text style={styles.label}>Localização</Text>
               <TextInput
-                placeholder="Seção 1" 
+                placeholder="Quintal" 
                 style={styles.input}
                 placeholderTextColor="#999"
                 value={values.location}
@@ -103,7 +109,11 @@ export default function FillSensorSettingsScreen() {
             </>
           )}
         </Formik>
-
+        <Image
+        source={require('@/src/assets/images/reflora-logo2.png')}
+        style={styles.logo}
+        resizeMode="contain"
+      />
       </View>
     </TouchableWithoutFeedback>
   );
