@@ -1,5 +1,6 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from 'expo-constants';
 import { useRouter } from 'expo-router';
 import { Formik } from 'formik';
 import React from 'react';
@@ -9,6 +10,7 @@ import styles from './loginStyles';
 const router = useRouter();
 
 export default function LoginScreen() {
+  const apiUrl = Constants?.expoConfig?.extra?.apiUrl;
   //esse dimissKeyboard fiz p quando o usuário clicar na tela, ele sair da caixa de texto, como tem normalmente em outros apps. 
   const dismissKeyboard = () => {
     Keyboard.dismiss();
@@ -33,7 +35,7 @@ export default function LoginScreen() {
           onSubmit={async (values, { setSubmitting }) => {
             try {
 
-              const response = await fetch('http://26.251.7.105:3000/api/login', {
+              const response = await fetch(apiUrl + '/login', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
