@@ -34,27 +34,26 @@ export default function ConfigScreen() {
     <View style={styles.container}>
       <Text style={styles.title}>Configurações</Text>
 
-      <View style={styles.section}>
+      <View style={styles.card}>
         <Text style={styles.sectionTitle}>Conta</Text>
-        <Text style={styles.text}>Nome: {userName}</Text>
-        <Text style={styles.text}>Email: {userEmail}</Text>
+        <Text style={styles.text}><Text style={styles.label}>Nome:</Text> {userName}</Text>
+        <Text style={styles.text}><Text style={styles.label}>Email:</Text> {userEmail}</Text>
       </View>
 
-      <View style={styles.section}>
+      <View style={styles.card}>
         <Text style={styles.sectionTitle}>Notificações</Text>
-        <Text style={styles.text}>Gerenciar notificações</Text>
-        <View style={styles.switchContainer}>
+        <View style={styles.switchRow}>
+          <Text style={styles.text}>Gerenciar notificações</Text>
           <Switch value={notificationsEnabled} onValueChange={toggleNotifications} />
         </View>
       </View>
 
-      <View style={styles.section}>
+      <View style={styles.card}>
         <Text style={styles.sectionTitle}>Ajuda e Suporte</Text>
-        <Text style={styles.text}>Contato SAC: 0800 011 55 66</Text>
+        <Text style={styles.text}>SAC: 0800 011 55 66</Text>
         <Text style={styles.text}>WhatsApp: (91) 99999-9999</Text>
       </View>
 
-      {/* Agora o botão de logout está no fim da tela */}
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <Text style={styles.logoutText}>Sair da conta</Text>
       </TouchableOpacity>

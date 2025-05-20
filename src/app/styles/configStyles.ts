@@ -1,49 +1,61 @@
 import { StyleSheet } from 'react-native';
 
-
 export default StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#e5d3b1',
-    paddingHorizontal: 20,
-    paddingTop: 50,
+    padding: 20,
   },
   title: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
-    color: '#0e3b22',
-    alignSelf: 'center',
-    marginBottom: 30,
+    marginBottom: 20,
+    marginTop: 40,
+    textAlign: 'center',
+    color: '#1F2937',
   },
-  section: {
-    marginBottom: 50,
+  card: {
+    backgroundColor: '#d0c0a0',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 3,
   },
   sectionTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#003920',
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#111827',
     marginBottom: 8,
   },
   text: {
     fontSize: 16,
-    marginBottom: 5,
+    color: '#374151',
+    marginBottom: 4,
   },
-  switchContainer: {
-    marginTop: 5,
-    alignItems: 'flex-start',
+  label: {
+    fontWeight: '600',
+    color: '#1F2937',
+  },
+  switchRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 8,
   },
   logoutButton: {
-    backgroundColor: '#B94141',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 20,
+    backgroundColor: '#EF4444',
+    paddingVertical: 14,
+    borderRadius: 10,
     alignItems: 'center',
-    alignSelf: 'center',
-    marginTop: 'auto',
-    marginBottom: 30,
+    marginTop: 20,
   },
   logoutText: {
-    color: 'white',
+    color: '#FFF',
+    fontSize: 16,
     fontWeight: 'bold',
   },
 });
