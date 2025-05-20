@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
     color: '#33582B',
     textAlign: 'center',
     marginBottom: 12,
+    marginTop: 20,
   },
   pickerIOS: {
     fontSize: 16,
