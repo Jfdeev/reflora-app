@@ -152,10 +152,18 @@ export default function DataScreen() {
           onValueChange={(v) => setSelectedSensorId(v as number)}
           value={selectedSensorId}
           useNativeAndroidPickerStyle={false}
-          Icon={() => <Ionicons name="chevron-down" size={18} color="gray" />}
+          Icon={() => (
+            <Ionicons
+              name="chevron-down"
+              size={18}
+              color="gray"
+              style={{ marginRight: 10, alignSelf: 'center' }}
+            />
+          )}
           style={{
             inputAndroid: styles.pickerAndroid,
             inputIOS: styles.pickerAndroid,
+            iconContainer: { top: 12, right: 10 }, // Adjust icon position
           }}
         />
 
