@@ -9,6 +9,7 @@ import {
 } from 'react-native-chart-kit'; // ou sua lib de preferência
 import { default as chartConfig, default as styles } from './dataDetailsScreen';
 
+
 interface SensorDataDetail {
   sensorDataId: number;
   soilHumidity: number;
@@ -87,6 +88,57 @@ export default function DataDetailScreen() {
   const maxData = weeks.map(w => (w.values.length ? Math.max(...w.values) : 0));
   const labels = weeks.map(w => w.label);
 
+
+  // Definição de faixas por parâmetro
+const thresholds: Record<MetricKey, {
+  ideal: [number, number];
+  intermediate: [number, number] | [number, number][];
+}> = {
+  soilHumidity: {
+    ideal: [20, 60],
+    intermediate: [[15, 20], [60, 65]],
+  },
+  temperature: {
+    ideal: [18, 30],
+    intermediate: [[15, 18], [30, 33]],
+  },
+  condutivity: {
+    ideal: [20, 200], 
+    intermediate: [[15, 20], [200, 250]], 
+  },
+  ph: {
+    ideal: [6.0, 7.0],
+    intermediate: [[5.5, 6.0], [7.0, 7.5]],
+  },
+  nitrogen: {
+    ideal: [20, 50],
+    intermediate: [[15, 20], [50, 60]],
+  },
+  phosphorus: {
+    ideal: [15, 40],
+    intermediate: [[10, 15], [40, 50]],
+  },
+  potassium: {
+    ideal: [100, 300],
+    intermediate: [[80, 100], [300, 350]],
+  },
+};
+
+// Retorna cor baseada na faixa
+function getColor(metric: MetricKey, value: number): string {
+  const { ideal, intermediate } = thresholds[metric];
+  // Critico: fora de todos os intervalos
+  const inIdeal = value >= ideal[0] && value <= ideal[1];
+  const inIntermediate = Array.isArray(intermediate[0])
+    ? (intermediate as [number, number][]).some(
+        ([min, max]) => value >= min && value <= max
+      )
+    : (value >= (intermediate as [number, number])[0] && value <= (intermediate as [number, number])[1]);
+  if (inIdeal) return '#33582B'; // verde
+  if (inIntermediate) return '#CCAD2D'; // amarelo
+  return '#CC5050'; // vermelho
+}
+
   return (
     <ScrollView contentContainerStyle={styles.styles.container}>
       {/* Cabeçalho */}
@@ -96,8 +148,8 @@ export default function DataDetailScreen() {
       </View>
 
       {/* Valor Atual */}
-      <View style={styles.styles.currentCard}>
-        <Ionicons name={cfg.icon} size={28} color="#33582B" />
+      <View style={[styles.styles.currentCard, { backgroundColor: getColor(metric, Number(current[metric])) }]}>
+        <Ionicons name={cfg.icon} size={28} color='#FFFFFF' />
         <Text style={styles.styles.currentValue}>
           {String((current as any)[metric])}{cfg.unit}
         </Text>
