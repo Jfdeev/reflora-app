@@ -156,6 +156,7 @@ export default function DataScreen() {
           style={{
             inputAndroid: styles.pickerAndroid,
             inputIOS: styles.pickerAndroid,
+            iconContainer: { top: 12, right: 10 }, // Adjust icon position
           }}
         />
 
