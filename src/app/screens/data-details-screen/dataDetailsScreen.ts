@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
     padding: HORIZONTAL_PADDING,
     backgroundColor: '#F7F1E3',
     flexGrow: 1,
-    marginTop: 28,
+    marginTop: 34,
   },
   loader: {
     flex: 1,
