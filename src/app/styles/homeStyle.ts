@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
     },
     alertText: {
-      color: '#F2E9D7',
+      color: '#000',
       marginLeft: 10,
       flex: 1,
       fontSize: 16,

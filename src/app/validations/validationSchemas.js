@@ -24,3 +24,10 @@ export const loginSchema = Yup.object().shape({
     .min(6, 'Senha deve ter no mínimo 6 caracteres')
     .required('Senha é obrigatória'),
 });
+
+export const sensorSettingsSchema = Yup.object().shape({
+  name: Yup.string()
+    .required('Nome é obrigatório'),
+  location: Yup.string()
+    .required('Localização é obrigatória'),
+});
