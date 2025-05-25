@@ -66,9 +66,9 @@ export default function FillSensorSettingsScreen() {
               router.push('/screens/(tabs)/home');
             } catch (error) {
               if (error instanceof Error) {
-                alert(error.message);
+                Alert.alert('Erro',error.message);
               } else {
-                alert('Ocorreu um erro desconhecido.');
+                Alert.alert('Ocorreu um erro desconhecido.');
               }
             } finally {
               setSubmitting(false);

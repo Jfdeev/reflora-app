@@ -4,7 +4,7 @@ import Constants from 'expo-constants';
 import { router, useRouter } from 'expo-router';
 import { Formik } from 'formik';
 import React from 'react';
-import { Keyboard, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import { Alert, Keyboard, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import { registerSchema } from '../../validations/validationSchemas';
 import styles from './registerStyles';
 
@@ -74,13 +74,13 @@ export default function RegisterScreen() {
       await AsyncStorage.setItem('email', data.email);
       router.push('/screens/(tabs)/home'); // redireciona após salvar os dados
     } else {
-      alert('Falha no cadastro. Tente novamente.');
+      Alert.alert('Falha no cadastro. Tente novamente.');
     }
   } catch (error) {
     if (error instanceof Error) {
-      alert(error.message);
+      Alert.alert('Erro', error.message);
     } else {
-      alert('Ocorreu um erro desconhecido.');
+      Alert.alert('Ocorreu um erro desconhecido.');
     }
   } finally {
     setSubmitting(false);
