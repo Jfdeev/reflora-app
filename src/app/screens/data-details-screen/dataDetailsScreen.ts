@@ -84,6 +84,21 @@ const styles = StyleSheet.create({
   chart: {
     width: SCREEN_WIDTH - HORIZONTAL_PADDING * 2,
   },
+  suggestionCard: {
+    backgroundColor: '#FFF4E0',
+    padding: 12,
+    borderRadius: 12,
+    marginVertical: 10,
+  },
+  suggestionTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 6,
+  },
+  suggestionText: {
+    fontSize: 14,
+    color: '#333',
+  },
 });
 
 const chartConfig = {

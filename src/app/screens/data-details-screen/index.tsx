@@ -124,6 +124,88 @@ const thresholds: Record<MetricKey, {
   },
 };
 
+function getSuggestion(metric: MetricKey, value: number): string | null {
+  switch (metric) {
+    case 'soilHumidity':
+      if (value < 20) {
+        return `Umidade muito baixa. Sugestão:
+- **Palhada vegetal**: espalhe 2–3 kg/m² de restos de capim, folhas secas ou palha.
+- **Cobertura morta com jornal**: coloque camadas de jornal úmido entre as plantas.`;
+      } else if (value > 60) {
+        return `Umidade muito alta. Sugestão:
+- **Sulcos de escoamento**: faça pequenos drenos ou valetas.
+- **Levarecimento**: adicione 0,5–1 kg/m² de areia grossa.`;
+      }
+      break;
+
+    case 'temperature':
+      if (value < 18) {
+        return `Temperatura muito baixa. Sugestão:
+- **Cobertura escura**: estenda lona preta ou plástico escuro nas madrugadas.
+- **Adubação verde**: semeie leguminosas de cobertura como feijão-de-porco.`;
+      } else if (value > 30) {
+        return `Temperatura muito alta. Sugestão:
+- **Cobertura clara**: utilize tecido branco para refletir radiação.
+- **Irrigação de superfície**: borrife água pela manhã para resfriar.`;
+      }
+      break;
+
+    case 'condutivity':
+      if (value < 0.2) {
+        return `Condutividade muito baixa. Sugestão:
+- **Chá de composto**: ferva 500g de resíduos em 10L de água, coe e aplique 5L/m².`;
+      } else if (value > 2.0) {
+        return `Condutividade muito alta. Sugestão:
+- **Lavagem de solo**: irrigue com 20–30 mm de água e deixe drenar.
+- **Matéria orgânica**: aplique 3–5 kg/m² de composto.`;
+      }
+      break;
+
+    case 'ph':
+      if (value < 5.5) {
+        return `Solo muito ácido. Sugestão:
+- **Casca de ovo moída** (100–200g/m²): espalhe e incorpore superficialmente.`;
+      } else if (value > 7.5) {
+        return `Solo muito alcalino. Sugestão:
+- **Borra de café** (500g) + **vinagre** (100 mL diluído): incorpore e regue.`;
+      }
+      break;
+
+    case 'nitrogen':
+      if (value < 15) {
+        return `Deficiência de Nitrogênio. Sugestão:
+- **Borra de café** (1 kg/m²): espalhe e incorpore a 5 cm de profundidade.`;
+      } else if (value > 60) {
+        return `Excesso de Nitrogênio. Sugestão:
+- Use Carvão vegetal (500g/m²): espalhe pela area, incorpore ao plantio e depois remova o excesso.`;
+      }
+      break;
+
+    case 'phosphorus':
+      if (value < 10) {
+        return `Deficiência de Fósforo. Sugestão:
+- **Farinha de osso caseira** (200g/m²): ossos limpos, secos e moídos.`;
+      } else if (value > 50) {
+        return `Excesso de Fósforo. Sugestão:
+- Reduza adubações e promova **rotação de culturas** com leguminosas.`;
+      }
+      break;
+
+    case 'potassium':
+      if (value < 80) {
+        return `Deficiência de Potássio. Sugestão:
+- **Casca de banana triturada** (1 kg/m²): distribua e cubra com palha.`;
+      } else if (value > 350) {
+        return `Excesso de Potássio. Sugestão:
+- **Irrigação profunda** (20–30 mm) + adição de matéria orgânica (5 kg/m²).`;
+      }
+      break;
+  }
+  return null;
+}
+
+const suggestion = getSuggestion(metric, Number(current[metric]));
+
 // Retorna cor baseada na faixa
 function getColor(metric: MetricKey, value: number): string {
   const { ideal, intermediate } = thresholds[metric];
@@ -193,6 +275,12 @@ function getColor(metric: MetricKey, value: number): string {
         </Text>
       </View>
     </View>
+    {suggestion && (
+  <View style={styles.styles.suggestionCard}>
+    <Text style={styles.styles.suggestionTitle}>Sugestão de Manejo</Text>
+    <Text style={styles.styles.suggestionText}>{suggestion}</Text>
+  </View>
+)}
   </View>
   </ScrollView>
   );
