@@ -1,60 +1,44 @@
 import { StyleSheet } from 'react-native';
 
+
 export default StyleSheet.create({
-   container: {
+  container: {
     flex: 1,
     backgroundColor: '#e5d3b1',
     padding: 20,
     paddingTop: 50,
   },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#0e3b22',
-    textAlign: 'center',
-    marginBottom: 20,
   },
-  pickerAndroid: {
-    fontSize: 16,
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-    borderWidth: 1,
-    borderColor: '#999',
-    borderRadius: 8,
-    color: '#000',
-    paddingRight: 30, // para o ícone não sobrepor
-    backgroundColor: '#fff',
-    marginBottom: 20,
+  notifications: {
+    gap: 15,
+    paddingBottom: 40,
   },
   card: {
-    padding: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 15,
     borderRadius: 12,
-    marginVertical: 8,
-    width: '100%',
   },
-  cardTextLabel: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    color: '#000',
-  },
-  cardTextValue: {
-    fontSize: 16,
-    color: '#000',
-  },
-  suggestionText: {
-    marginTop: 8,
-    fontStyle: 'italic',
-    color: '#333',
-  },
-  dateText: {
-    marginTop: 6,
-    fontSize: 12,
-    color: '#555',
-  },
-  scrollView: {
+  message: {
     flex: 1,
-    backgroundColor: '#e5d3b1',
-    paddingHorizontal: 16,
-    paddingTop: 40,
+    fontSize: 14,
+    color: '#000',
+    fontWeight: '600',
+  },
+  seeMore: {
+    textAlign: 'center',
+    fontWeight: 'bold',
+    marginTop: 20,
+    textDecorationLine: 'underline',
   },
 });
