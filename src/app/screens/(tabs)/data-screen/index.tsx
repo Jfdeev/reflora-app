@@ -11,18 +11,38 @@ import styles from '../../../styles/dataScreenStyles';
 interface SensorData {
   sensorDataId: number;
   soilHumidity: number;
+  levelHumidity: string;       
   temperature: number;
+  levelTemperature: string;
   condutivity: number;
+  levelCondutivity: string;
   ph: number;
+  levelPh: string;
   nitrogen: number;
+  levelNitrogen: string;
   phosphorus: number;
+  levelPhosphorus: string;
   potassium: number;
+  levelPotassium: string;
   dateTime: string;
 }
 
 interface UserSensor {
   sensorId: number;
   sensorName: string;
+}
+
+function getColor(level?: string): string {
+  switch (level) {
+    case 'OK':
+      return '#33582B'; // Verde
+    case 'Alerta':
+      return '#CCAD2D'; // Amarelo
+    case 'Crítico':
+      return '#CC5050'; // Vermelho
+    default:
+      return '#999'; // Cinza neutro (fallback)
+  }
 }
 
 type Metric =
@@ -73,7 +93,7 @@ export default function DataScreen() {
       fetchSensorData(selectedSensorId).finally(() => setLoading(false));
     }
   }, [selectedSensorId]);
-
+  
   const openDetail = (metric: Metric) => {
     if (selectedSensorId && sensorData) {
       router.push({
@@ -109,16 +129,16 @@ export default function DataScreen() {
 
       <View style={styles.cardGrid}>
         {[
-          { label: 'Umidade do Solo', value: sensorData?.soilHumidity.toFixed(2) + '%', color: '#33582B', metric: 'soilHumidity' as Metric },
-          { label: 'Temperatura', value: sensorData?.temperature.toFixed(2) + 'ºC', color: '#CCAD2D', metric: 'temperature' as Metric },
-          { label: 'Condutividade do Solo', value: sensorData?.condutivity, color: '#33582B', metric: 'condutivity' as Metric },
-          { label: `PH`, value: sensorData?.ph.toFixed(2), color: '#33582B', metric: 'ph' as Metric },
-          { label: 'Nitrogênio', value: sensorData?.nitrogen.toFixed(2) + '%', color: '#CC5050', metric: 'nitrogen' as Metric },
-          { label: 'Fósforo', value: sensorData?.phosphorus.toFixed(2) + '%', color: '#CCAD2D', metric: 'phosphorus' as Metric },
-          { label: 'Potássio', value: sensorData?.potassium.toFixed(2) + '%', color: '#CCAD2D', metric: 'potassium' as Metric },
+          { label: 'Umidade do Solo', value: sensorData?.soilHumidity.toFixed(2) + '%', level: sensorData?.levelHumidity, metric: 'soilHumidity' as Metric },
+          { label: 'Temperatura', value: sensorData?.temperature.toFixed(2) + 'ºC', level: sensorData?.levelTemperature, metric: 'temperature' as Metric },
+          { label: 'Condutividade do Solo', value: sensorData?.condutivity, level: sensorData?.levelCondutivity, metric: 'condutivity' as Metric },
+          { label: `PH`, value: sensorData?.ph.toFixed(2), level: sensorData?.levelPh, metric: 'ph' as Metric },
+          { label: 'Nitrogênio', value: sensorData?.nitrogen.toFixed(2) + '%', level: sensorData?.levelNitrogen, metric: 'nitrogen' as Metric },
+          { label: 'Fósforo', value: sensorData?.phosphorus.toFixed(2) + '%', level: sensorData?.levelPhosphorus, metric: 'phosphorus' as Metric },
+          { label: 'Potássio', value: sensorData?.potassium.toFixed(2) + '%', level: sensorData?.levelPhosphorus, metric: 'potassium' as Metric },
         ].map((item) => (
           <Pressable key={item.metric} style={[styles.cardWrapper]} onPress={() => openDetail(item.metric)}>
-            <View style={[styles.card, { backgroundColor: item.color }]}>
+            <View style={[styles.card, { backgroundColor: getColor(item.level) }]}>
               <Text style={styles.cardTextLabel}>{item.label}:</Text>
               <Text style={styles.cardTextValue}>{item.value ?? 'N/A'}</Text>
             </View>
