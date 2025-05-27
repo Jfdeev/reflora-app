@@ -32,18 +32,6 @@ interface UserSensor {
   sensorName: string;
 }
 
-function getColor(level?: string): string {
-  switch (level) {
-    case 'OK':
-      return '#33582B'; // Verde
-    case 'Alerta':
-      return '#CCAD2D'; // Amarelo
-    case 'Crítico':
-      return '#CC5050'; // Vermelho
-    default:
-      return '#999'; // Cinza neutro (fallback)
-  }
-}
 
 type Metric =
   | 'soilHumidity'
@@ -90,7 +78,7 @@ const thresholds: Record<Metric, {
 };
 
 // Retorna cor baseada na faixa
-function getColor(metric: Metric, value: number): string {
+function getColor(metric: Metric, value: number) {
   const { ideal, intermediate } = thresholds[metric];
   // Critico: fora de todos os intervalos
   const inIdeal = value >= ideal[0] && value <= ideal[1];
@@ -239,7 +227,7 @@ export default function DataScreen() {
       verticalLabelRotation={-15}
       showValuesOnTopOfBars
     />
-  </View>
+  </View>)}
 
       </View>
     </ScrollView>
