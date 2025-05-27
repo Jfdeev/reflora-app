@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const HORIZONTAL_PADDING = 16;
@@ -8,6 +8,7 @@ const styles = StyleSheet.create({
     padding: HORIZONTAL_PADDING,
     backgroundColor: '#F7F1E3',
     flexGrow: 1,
+    marginTop: 34,
   },
   loader: {
     flex: 1,
@@ -16,7 +17,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: 16,
-    color: '#CC5050',
+    color: '#000000',
     textAlign: 'center',
     marginTop: 20,
   },
@@ -29,12 +30,11 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 22,
     fontWeight: 'bold',
-    color: '#33582B',
+    color: '#000000',
     textAlign: 'center',
-    marginRight: 24, // espaço para alinhamento do ícone de voltar
+    marginRight: 24,
   },
   currentCard: {
-    backgroundColor: '#33582B',
     borderRadius: 12,
     padding: 16,
     marginBottom: 20,
@@ -42,12 +42,12 @@ const styles = StyleSheet.create({
   currentValue: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#FFFFFF',
+    color: '#000000',
     marginVertical: 8,
   },
   currentTime: {
     fontSize: 12,
-    color: '#FFFFFF',
+    color: '#000000',
   },
   section: {
     marginBottom: 24,
@@ -55,10 +55,9 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#33582B',
+    color: '#000000',
     marginBottom: 8,
   },
-
   statsRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -73,17 +72,32 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   statLabel: {
-    fontSize: 14,
-    color: '#555',
+    fontSize: 12,
+    color: '#000000',
   },
   statValue: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#33582B',
+    color: '#000000',
     marginTop: 4,
   },
   chart: {
     width: SCREEN_WIDTH - HORIZONTAL_PADDING * 2,
+  },
+  suggestionCard: {
+    backgroundColor: '#FFF4E0',
+    padding: 12,
+    borderRadius: 12,
+    marginVertical: 10,
+  },
+  suggestionTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 6,
+  },
+  suggestionText: {
+    fontSize: 14,
+    color: '#333',
   },
 });
 
@@ -91,15 +105,15 @@ const chartConfig = {
   backgroundGradientFrom: '#F7F1E3',
   backgroundGradientTo: '#F7F1E3',
   decimalPlaces: 2,
-  color: (opacity = 1) => `rgba(51, 88, 43, ${opacity})`,
-  labelColor: (opacity = 1) => `rgba(51, 88, 43, ${opacity})`,
+  color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+  labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
   style: {
     borderRadius: 12,
   },
   propsForDots: {
     r: '4',
     strokeWidth: '2',
-    stroke: '#33582B',
+    stroke: '#000000',
   },
 };
 

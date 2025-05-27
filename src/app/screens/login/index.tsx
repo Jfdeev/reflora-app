@@ -4,7 +4,7 @@ import Constants from 'expo-constants';
 import { useRouter } from 'expo-router';
 import { Formik } from 'formik';
 import React from 'react';
-import { Keyboard, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import { Alert, Keyboard, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import { loginSchema } from '../../validations/validationSchemas';
 import styles from './loginStyles';
 const router = useRouter();
@@ -60,13 +60,13 @@ export default function LoginScreen() {
 
                 router.push('/screens/(tabs)/home');
               } else {
-                alert('Login falhou. Tente novamente.');
+                Alert.alert('Login falhou. Tente novamente.');
               }
             } catch (error) {
               if (error instanceof Error) {
-                alert(error.message);
+                Alert.alert('Erro', error.message);
               } else {
-                alert('Ocorreu um erro desconhecido.');
+                Alert.alert('Ocorreu um erro desconhecido.');
               }
             } finally {
               setSubmitting(false);
