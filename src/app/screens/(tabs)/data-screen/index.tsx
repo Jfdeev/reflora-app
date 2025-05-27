@@ -11,7 +11,7 @@ import styles from '../../../styles/dataScreenStyles';
 interface SensorData {
   sensorDataId: number;
   soilHumidity: number;
-  levelHumidity: string;       
+  levelHumidity: string;
   temperature: number;
   levelTemperature: string;
   condutivity: number;
@@ -32,7 +32,6 @@ interface UserSensor {
   sensorName: string;
 }
 
-
 type Metric =
   | 'soilHumidity'
   | 'temperature'
@@ -42,54 +41,29 @@ type Metric =
   | 'phosphorus'
   | 'potassium';
 
-// Definição de faixas por parâmetro
-const thresholds: Record<Metric, {
-  ideal: [number, number];
-  intermediate: [number, number] | [number, number][];
-}> = {
-  soilHumidity: {
-    ideal: [20, 60],
-    intermediate: [[15, 20], [60, 65]],
-  },
-  temperature: {
-    ideal: [18, 30],
-    intermediate: [[15, 18], [30, 33]],
-  },
-  condutivity: {
-    ideal: [20, 200], 
-    intermediate: [[15, 20], [200, 250]], 
-  },
-  ph: {
-    ideal: [6.0, 7.0],
-    intermediate: [[5.5, 6.0], [7.0, 7.5]],
-  },
-  nitrogen: {
-    ideal: [20, 50],
-    intermediate: [[15, 20], [50, 60]],
-  },
-  phosphorus: {
-    ideal: [15, 40],
-    intermediate: [[10, 15], [40, 50]],
-  },
-  potassium: {
-    ideal: [100, 300],
-    intermediate: [[80, 100], [300, 350]],
-  },
-};
+const parameters = [
+  { label: 'Umidade do Solo', metric: 'soilHumidity', levelKey: 'levelHumidity', suffix: '%' },
+  { label: 'Temperatura', metric: 'temperature', levelKey: 'levelTemperature', suffix: 'ºC' },
+  { label: 'Condutividade do Solo', metric: 'condutivity', levelKey: 'levelCondutivity', suffix: '' },
+  { label: 'PH', metric: 'ph', levelKey: 'levelPh', suffix: '' },
+  { label: 'Nitrogênio', metric: 'nitrogen', levelKey: 'levelNitrogen', suffix: '%' },
+  { label: 'Fósforo', metric: 'phosphorus', levelKey: 'levelPhosphorus', suffix: '%' },
+  { label: 'Potássio', metric: 'potassium', levelKey: 'levelPotassium', suffix: '%' },
+] as const;
 
-// Retorna cor baseada na faixa
-function getColor(metric: Metric, value: number) {
-  const { ideal, intermediate } = thresholds[metric];
-  // Critico: fora de todos os intervalos
-  const inIdeal = value >= ideal[0] && value <= ideal[1];
-  const inIntermediate = Array.isArray(intermediate[0])
-    ? (intermediate as [number, number][]).some(
-        ([min, max]) => value >= min && value <= max
-      )
-    : (value >= (intermediate as [number, number])[0] && value <= (intermediate as [number, number])[1]);
-  if (inIdeal) return '#33582B'; // verde
-  if (inIntermediate) return '#CCAD2D'; // amarelo
-  return '#CC5050'; // vermelho
+// Cor baseada no nível textual retornado da lógica fuzzy
+function getColorByLevel(level: string) {
+  switch (level.toLowerCase()) {
+    case 'ideal':
+      return '#33582B'; // verde
+    case 'intermediário':
+    case 'intermediario':
+      return '#CCAD2D'; // amarelo
+    case 'crítico':
+    case 'critico':
+    default:
+      return '#CC5050'; // vermelho
+  }
 }
 
 export default function DataScreen() {
@@ -135,7 +109,7 @@ export default function DataScreen() {
       fetchSensorData(selectedSensorId).finally(() => setLoading(false));
     }
   }, [selectedSensorId]);
-  
+
   const openDetail = (metric: Metric) => {
     if (selectedSensorId && sensorData) {
       router.push({
@@ -164,71 +138,64 @@ export default function DataScreen() {
           style={{
             inputAndroid: styles.pickerAndroid,
             inputIOS: styles.pickerAndroid,
-            iconContainer: { top: 12, right: 10 }, // Adjust icon position
+            iconContainer: { top: 12, right: 10 },
           }}
         />
 
         <View style={styles.cardGrid}>
-  {[
-    { label: 'Umidade do Solo', metric: 'soilHumidity' as Metric, suffix: '%' },
-    { label: 'Temperatura', metric: 'temperature' as Metric, suffix: 'ºC' },
-    { label: 'Condutividade do Solo', metric: 'condutivity' as Metric, suffix: '' },
-    { label: 'PH', metric: 'ph' as Metric, suffix: '' },
-    { label: 'Nitrogênio', metric: 'nitrogen' as Metric, suffix: '%' },
-    { label: 'Fósforo', metric: 'phosphorus' as Metric, suffix: '%' },
-    { label: 'Potássio', metric: 'potassium' as Metric, suffix: '%' },
-  ].map(({ label, metric, suffix }) => {
-    const rawValue = sensorData?.[metric] ?? 0;
-    const valueStr = sensorData ? rawValue.toFixed(2) + suffix : 'N/A';
-    const color = sensorData ? getColor(metric, rawValue) : '#CCCCCC';
-    return (
-      <Pressable key={metric} style={styles.cardWrapper} onPress={() => openDetail(metric)}>
-        <View style={[styles.card, { backgroundColor: color }]}>
-          <Text style={styles.cardTextLabel}>{label}:</Text>
-          <Text style={styles.cardTextValue}>{valueStr}</Text>
+          {parameters.map(({ label, metric, levelKey, suffix }) => {
+            const raw = sensorData ? sensorData[metric] : 0;
+            const level = sensorData ? sensorData[levelKey] : 'OK';
+            return (
+              <Pressable key={metric} style={styles.cardWrapper} onPress={() => openDetail(metric)}>
+                <View style={[styles.card, { backgroundColor: getColorByLevel(level) }]}>
+                  <Text style={styles.cardTextLabel}>{label}:</Text>
+                  <Text style={styles.cardTextValue}>{raw.toFixed(2)}{suffix}</Text>
+                </View>
+              </Pressable>
+            );
+          })}
         </View>
-      </Pressable>
-    );
-  })}
-</View>
 
-{sensorData && (
-  <View style={styles.chartContainer}>
-    <BarChart
-      data={{
-        labels: ['Umidade','Temp.','Condut.','PH','N','P','K'],
-        datasets: [{ data: [
-          sensorData.soilHumidity,
-          sensorData.temperature,
-          sensorData.condutivity,
-          sensorData.ph,
-          sensorData.nitrogen,
-          sensorData.phosphorus,
-          sensorData.potassium,
-        ] }]
-      }}
-      width={340}
-      height={260}
-      fromZero
-      yAxisLabel=""
-      yAxisSuffix=""
-      chartConfig={{
-        backgroundColor: '#F2E9D7',
-        backgroundGradientFrom: '#F2E9D7',
-        backgroundGradientTo: '#F2E9D7',
-        decimalPlaces: 2,
-        color: (opacity = 1) => `rgba(51, 88, 43, ${opacity})`,
-        labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-        style: { borderRadius: 16 },
-        propsForLabels: { fontSize: 10, textAnchor: 'middle' },
-        barPercentage: 0.7
-      }}
-      style={{ marginVertical: 8, borderRadius: 16, alignSelf: 'center' }}
-      verticalLabelRotation={-15}
-      showValuesOnTopOfBars
-    />
-  </View>)}
-
+        {sensorData && (
+          <View style={styles.chartContainer}>
+            <BarChart
+              data={{
+                labels: ['Umidade', 'Temp.', 'Condut.', 'PH', 'N', 'P', 'K'],
+                datasets: [{
+                  data: [
+                    sensorData.soilHumidity,
+                    sensorData.temperature,
+                    sensorData.condutivity,
+                    sensorData.ph,
+                    sensorData.nitrogen,
+                    sensorData.phosphorus,
+                    sensorData.potassium,
+                  ]
+                }]
+              }}
+              width={340}
+              height={260}
+              fromZero
+              yAxisLabel=""
+              yAxisSuffix=""
+              chartConfig={{
+                backgroundColor: '#F2E9D7',
+                backgroundGradientFrom: '#F2E9D7',
+                backgroundGradientTo: '#F2E9D7',
+                decimalPlaces: 2,
+                color: (opacity = 1) => `rgba(51, 88, 43, ${opacity})`,
+                labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                style: { borderRadius: 16 },
+                propsForLabels: { fontSize: 10, textAnchor: 'middle' },
+                barPercentage: 0.7,
+              }}
+              style={{ marginVertical: 8, borderRadius: 16, alignSelf: 'center' }}
+              verticalLabelRotation={-15}
+              showValuesOnTopOfBars
+            />
+          </View>
+        )}
       </View>
     </ScrollView>
   );
