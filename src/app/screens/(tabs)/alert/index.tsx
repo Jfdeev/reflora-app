@@ -1,14 +1,34 @@
-import { FontAwesome } from '@expo/vector-icons';
+import React, { useEffect, useState } from 'react';
+import { ScrollView, Text, View, TouchableOpacity, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
 import { useRouter } from 'expo-router';
-import React, { useEffect, useState } from 'react';
-import { ScrollView, Text, View, Button, TouchableOpacity } from 'react-native';
-import styles from '../../../styles/alertStyles';
+import RNPickerSelect from 'react-native-picker-select';
+import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 
-// Interface do alerta
+import styles from '../../../styles/alertStyles';
+
+interface SensorData {
+  sensorDataId: number;
+  soilHumidity: number;
+  levelHumidity: string;
+  temperature: number;
+  levelTemperature: string;
+  condutivity: number;
+  levelCondutivity: string;
+  ph: number;
+  levelPh: string;
+  nitrogen: number;
+  levelNitrogen: string;
+  phosphorus: number;
+  levelPhosphorus: string;
+  potassium: number;
+  levelPotassium: string;
+  dateTime: string;
+}
+
 type Alert = {
   alertId: number;
   sensorId: number;
@@ -17,63 +37,98 @@ type Alert = {
   timestamp: string;
 };
 
-// Interface do sensor
-type Sensor = {
+interface UserSensor {
   sensorId: number;
   sensorName: string;
-};
+}
 
-export default function NotificationsScreen() {
+function getColor(level?: string): string {
+  switch (level) {
+    case 'OK':
+      return '#33582B';
+    case 'Alerta':
+      return '#CCAD2D';
+    case 'Crítico':
+      return '#CC5050';
+    default:
+      return '#999';
+  }
+}
+
+export default function AlertScreen() {
   const apiUrl = Constants?.expoConfig?.extra?.apiUrl!;
   const router = useRouter();
 
+  const [sensorData, setSensorData] = useState<SensorData | null>(null);
+  const [userSensors, setUserSensors] = useState<UserSensor[]>([]);
+  const [selectedSensorId, setSelectedSensorId] = useState<number | null>(null);
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [sensorsMap, setSensorsMap] = useState<Record<number, string>>({});
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
 
+  // Sensor info atual
+  const alertMetrics = sensorData
+    ? [
+        { label: 'Umidade do Solo', value: sensorData.soilHumidity.toFixed(2) + '%', level: sensorData.levelHumidity },
+        { label: 'Temperatura', value: sensorData.temperature.toFixed(2) + 'ºC', level: sensorData.levelTemperature },
+        { label: 'Condutividade do Solo', value: sensorData.condutivity.toFixed(2), level: sensorData.levelCondutivity },
+        { label: 'PH', value: sensorData.ph.toFixed(2), level: sensorData.levelPh },
+        { label: 'Nitrogênio', value: sensorData.nitrogen.toFixed(2) + '%', level: sensorData.levelNitrogen },
+        { label: 'Fósforo', value: sensorData.phosphorus.toFixed(2) + '%', level: sensorData.levelPhosphorus },
+        { label: 'Potássio', value: sensorData.potassium.toFixed(2) + '%', level: sensorData.levelPotassium },
+      ].filter((item) => item.level === 'Alerta' || item.level === 'Crítico')
+    : [];
+
+  // Carrega sensores e alertas
   useEffect(() => {
-    Notifications.setNotificationHandler({
-      handleNotification: async () => ({
-        shouldShowAlert: true,
-        shouldPlaySound: true,
-        shouldSetBadge: false,
-        shouldShowBanner: true,
-        shouldShowList: true,
-      }),
-    });
     registerForPushNotificationsAsync();
-    fetchAllAlerts();
+    fetchUserSensors();
   }, []);
 
-  // exibe notificação local
-  const displayNotification = async (alert: Alert) => {
-    await Notifications.scheduleNotificationAsync({
-      content: {
-        title: `Alerta: ${alert.level}`,
-        body: alert.message,
-        sound: true,
-        priority: Notifications.AndroidNotificationPriority.MAX,
-      },
-      trigger: null,
+  useEffect(() => {
+    if (selectedSensorId != null) {
+      fetchSensorData(selectedSensorId);
+    } else {
+      setSensorData(null);
+    }
+  }, [selectedSensorId]);
+
+  const fetchUserSensors = async () => {
+    setLoading(true);
+    const token = await AsyncStorage.getItem('token');
+    if (!token) return;
+    const res = await fetch(`${apiUrl}/sensors`, {
+      headers: { Authorization: `Bearer ${token}` },
     });
+    const sensors: UserSensor[] = await res.json();
+    if (res.ok) {
+      setUserSensors(sensors);
+      const map: Record<number, string> = {};
+      sensors.forEach((s) => (map[s.sensorId] = s.sensorName));
+      setSensorsMap(map);
+      fetchAllAlerts(sensors); // busca alertas ao obter sensores
+    }
+    setLoading(false);
   };
 
-  // obtém sensores do usuário e depois todos os alertas
-  const fetchAllAlerts = async () => {
+  const fetchSensorData = async (sensorId: number) => {
     setLoading(true);
+    const token = await AsyncStorage.getItem('token');
+    if (!token) return;
+    const res = await fetch(`${apiUrl}/sensors/${sensorId}/data`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const data: SensorData[] = await res.json();
+    if (res.ok && data.length > 0) setSensorData(data[data.length - 1]);
+    setLoading(false);
+  };
+
+  const fetchAllAlerts = async (sensors: UserSensor[]) => {
     try {
       const token = await AsyncStorage.getItem('token');
-      const resSensors = await fetch(`${apiUrl}/sensors`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!resSensors.ok) throw new Error('Erro ao listar sensores');
-      const sensors: Sensor[] = await resSensors.json();
-      const map: Record<number, string> = {};
-      sensors.forEach((s) => { map[s.sensorId] = s.sensorName; });
-      setSensorsMap(map);
-
       const allAlerts: Alert[] = [];
+
       for (const sensor of sensors) {
         const res = await fetch(`${apiUrl}/sensor/${sensor.sensorId}/alerts`, {
           headers: { Authorization: `Bearer ${token}` },
@@ -83,16 +138,13 @@ export default function NotificationsScreen() {
           allAlerts.push(...sensorAlerts);
         }
       }
+
       allAlerts.sort((a, b) => b.alertId - a.alertId);
       setAlerts(allAlerts);
-
       await handleNewAlerts(allAlerts);
-      setError('');
     } catch (err: any) {
+      setError('Erro ao carregar alertas');
       console.error(err);
-      setError(err.message || 'Erro ao carregar alertas');
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -102,11 +154,20 @@ export default function NotificationsScreen() {
     const toNotify = newAlerts.filter(
       (a) => ['Crítico', 'Alerta'].includes(a.level) && !seenIds.includes(a.alertId)
     );
-    if (toNotify.length) {
-      for (const alert of toNotify) await displayNotification(alert);
-      const updated = [...seenIds, ...toNotify.map((a) => a.alertId)].slice(-100);
-      await AsyncStorage.setItem('seenAlertIds', JSON.stringify(updated));
+
+    for (const alert of toNotify) {
+      await Notifications.scheduleNotificationAsync({
+        content: {
+          title: `Alerta: ${alert.level}`,
+          body: alert.message,
+          sound: true,
+        },
+        trigger: null,
+      });
     }
+
+    const updated = [...seenIds, ...toNotify.map((a) => a.alertId)].slice(-100);
+    await AsyncStorage.setItem('seenAlertIds', JSON.stringify(updated));
   };
 
   const deleteAlert = async (alertId: number) => {
@@ -116,56 +177,70 @@ export default function NotificationsScreen() {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });
-      if (!res.ok) throw new Error('Erro ao excluir alerta');
-      setAlerts((prev) => prev.filter((a) => a.alertId !== alertId));
+      if (res.ok) {
+        setAlerts((prev) => prev.filter((a) => a.alertId !== alertId));
+      }
     } catch (err) {
       console.error(err);
     }
   };
 
-  const getAlertColor = (level: string) => {
-    switch (level) {
-      case 'OK': return '#33582B';
-      case 'Alerta': return '#CCAD2D';
-      case 'Crítico': return '#CC5050';
-      default: return '#FFFFFF';
-    }
-  };
-
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Alertas</Text>
-      </View>
-      <Button title="Atualizar Alertas" onPress={fetchAllAlerts} />
-      <ScrollView contentContainerStyle={styles.notifications}>
-        {loading ? (
-          <Text>Carregando alertas...</Text>
-        ) : error ? (
-          <Text>{error}</Text>
-        ) : alerts.length === 0 ? (
-          <Text>Nenhum alerta.</Text>
+    <ScrollView style={styles.scrollView}>
+      <View style={styles.container}>
+        <Text style={styles.title}>Alertas do Cultivo</Text>
+
+        <RNPickerSelect
+          placeholder={{ label: 'Selecione o Sensor', value: null }}
+          items={userSensors.map((s) => ({
+            label: s.sensorName,
+            value: s.sensorId,
+            key: String(s.sensorId),
+          }))}
+          onValueChange={(v) => setSelectedSensorId(v as number)}
+          value={selectedSensorId}
+          useNativeAndroidPickerStyle={false}
+          Icon={() => <Ionicons name="chevron-down" size={18} color="gray" />}
+          style={{
+            inputAndroid: styles.pickerAndroid,
+            inputIOS: styles.pickerAndroid,
+          }}
+        />
+
+        {loading && <Text>Carregando dados...</Text>}
+
+        {!loading && selectedSensorId && alertMetrics.length === 0 && (
+          <Text style={{ marginTop: 20, fontSize: 16, textAlign: 'center' }}>
+            Nenhum alerta para este sensor no momento.
+          </Text>
+        )}
+
+        {alertMetrics.map((item, idx) => (
+          <View key={idx} style={[styles.card, { backgroundColor: getColor(item.level) }]}>
+            <Text style={styles.cardTextLabel}>{item.label}:</Text>
+            <Text style={styles.cardTextValue}>{item.value}</Text>
+          </View>
+        ))}
+
+        <Text style={[styles.title, { marginTop: 30 }]}>Histórico de Alertas</Text>
+
+        {alerts.length === 0 ? (
+          <Text>Nenhum alerta registrado.</Text>
         ) : (
           alerts.map((alert) => (
-            <View
-              key={alert.alertId}
-              style={[styles.card, { backgroundColor: getAlertColor(alert.level) }]}
-            >
-              <FontAwesome name="bell" size={20} color="#000" style={{ marginRight: 10 }} />
-              <View style={{ flex: 1 }}>
-                <Text style={styles.message}>
-                  [{sensorsMap[alert.sensorId] || `Sensor ${alert.sensorId}`}] {alert.message}{' '}
-                  <Text style={{ fontStyle: 'italic' }}>{new Date(alert.timestamp).toLocaleString()}</Text>
-                </Text>
-              </View>
+            <View key={alert.alertId} style={[styles.card, { backgroundColor: getColor(alert.level) }]}>
+              <Text style={styles.message}>
+                [{sensorsMap[alert.sensorId] || `Sensor ${alert.sensorId}`}] {alert.message}{' '}
+                <Text style={{ fontStyle: 'italic' }}>{new Date(alert.timestamp).toLocaleString()}</Text>
+              </Text>
               <TouchableOpacity onPress={() => deleteAlert(alert.alertId)}>
                 <FontAwesome name="trash" size={20} color="#000" />
               </TouchableOpacity>
             </View>
           ))
         )}
-      </ScrollView>
-    </View>
+      </View>
+    </ScrollView>
   );
 }
 

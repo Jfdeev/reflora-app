@@ -11,18 +11,38 @@ import styles from '../../../styles/dataScreenStyles';
 interface SensorData {
   sensorDataId: number;
   soilHumidity: number;
+  levelHumidity: string;       
   temperature: number;
+  levelTemperature: string;
   condutivity: number;
+  levelCondutivity: string;
   ph: number;
+  levelPh: string;
   nitrogen: number;
+  levelNitrogen: string;
   phosphorus: number;
+  levelPhosphorus: string;
   potassium: number;
+  levelPotassium: string;
   dateTime: string;
 }
 
 interface UserSensor {
   sensorId: number;
   sensorName: string;
+}
+
+function getColor(level?: string): string {
+  switch (level) {
+    case 'OK':
+      return '#33582B'; // Verde
+    case 'Alerta':
+      return '#CCAD2D'; // Amarelo
+    case 'Crítico':
+      return '#CC5050'; // Vermelho
+    default:
+      return '#999'; // Cinza neutro (fallback)
+  }
 }
 
 type Metric =
@@ -127,7 +147,7 @@ export default function DataScreen() {
       fetchSensorData(selectedSensorId).finally(() => setLoading(false));
     }
   }, [selectedSensorId]);
-
+  
   const openDetail = (metric: Metric) => {
     if (selectedSensorId && sensorData) {
       router.push({
@@ -161,68 +181,66 @@ export default function DataScreen() {
         />
 
         <View style={styles.cardGrid}>
-          {(
-            [
-              { label: 'Umidade do Solo', metric: 'soilHumidity' as Metric, suffix: '%' },
-              { label: 'Temperatura', metric: 'temperature' as Metric, suffix: 'ºC' },
-              { label: 'Condutividade do Solo', metric: 'condutivity' as Metric, suffix: '' },
-              { label: 'PH', metric: 'ph' as Metric, suffix: '' },
-              { label: 'Nitrogênio', metric: 'nitrogen' as Metric, suffix: '%' },
-              { label: 'Fósforo', metric: 'phosphorus' as Metric, suffix: '%' },
-              { label: 'Potássio', metric: 'potassium' as Metric, suffix: '%' },
-            ] as const
-          ).map(({ label, metric, suffix }) => {
-            const rawValue = sensorData?.[metric] ?? 0;
-            const valueStr = sensorData ? rawValue.toFixed(2) + suffix : 'N/A';
-            const color = sensorData ? getColor(metric, rawValue) : '#CCCCCC';
-            return (
-              <Pressable key={metric} style={styles.cardWrapper} onPress={() => openDetail(metric)}>
-                <View style={[styles.card, { backgroundColor: color }]}>                  
-                  <Text style={styles.cardTextLabel}>{label}:</Text>
-                  <Text style={styles.cardTextValue}>{valueStr}</Text>
-                </View>
-              </Pressable>
-            );
-          })}
+  {[
+    { label: 'Umidade do Solo', metric: 'soilHumidity' as Metric, suffix: '%' },
+    { label: 'Temperatura', metric: 'temperature' as Metric, suffix: 'ºC' },
+    { label: 'Condutividade do Solo', metric: 'condutivity' as Metric, suffix: '' },
+    { label: 'PH', metric: 'ph' as Metric, suffix: '' },
+    { label: 'Nitrogênio', metric: 'nitrogen' as Metric, suffix: '%' },
+    { label: 'Fósforo', metric: 'phosphorus' as Metric, suffix: '%' },
+    { label: 'Potássio', metric: 'potassium' as Metric, suffix: '%' },
+  ].map(({ label, metric, suffix }) => {
+    const rawValue = sensorData?.[metric] ?? 0;
+    const valueStr = sensorData ? rawValue.toFixed(2) + suffix : 'N/A';
+    const color = sensorData ? getColor(metric, rawValue) : '#CCCCCC';
+    return (
+      <Pressable key={metric} style={styles.cardWrapper} onPress={() => openDetail(metric)}>
+        <View style={[styles.card, { backgroundColor: color }]}>
+          <Text style={styles.cardTextLabel}>{label}:</Text>
+          <Text style={styles.cardTextValue}>{valueStr}</Text>
         </View>
+      </Pressable>
+    );
+  })}
+</View>
 
-        {sensorData && (
-          <View style={styles.chartContainer}>
-            <BarChart
-              data={{
-                labels: ['Umidade','Temp.','Condut.','PH','N','P','K'],
-                datasets: [{ data: [
-                  sensorData.soilHumidity,
-                  sensorData.temperature,
-                  sensorData.condutivity,
-                  sensorData.ph,
-                  sensorData.nitrogen,
-                  sensorData.phosphorus,
-                  sensorData.potassium,
-                ] }]  
-              }}
-              width={340}
-              height={260}
-              fromZero
-              yAxisLabel=""
-              yAxisSuffix=""
-              chartConfig={{
-                backgroundColor: '#F2E9D7',
-                backgroundGradientFrom: '#F2E9D7',
-                backgroundGradientTo: '#F2E9D7',
-                decimalPlaces: 2,
-                color: (opacity = 1) => `rgba(51, 88, 43, ${opacity})`,                
-                labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,                
-                style: { borderRadius: 16 },                
-                propsForLabels: { fontSize: 10, textAnchor: 'middle' },
-                barPercentage: 0.7              
-              }}
-              style={{ marginVertical: 8, borderRadius: 16, alignSelf: 'center' }}
-              verticalLabelRotation={-15}
-              showValuesOnTopOfBars
-            />
-          </View>
-        )}
+{sensorData && (
+  <View style={styles.chartContainer}>
+    <BarChart
+      data={{
+        labels: ['Umidade','Temp.','Condut.','PH','N','P','K'],
+        datasets: [{ data: [
+          sensorData.soilHumidity,
+          sensorData.temperature,
+          sensorData.condutivity,
+          sensorData.ph,
+          sensorData.nitrogen,
+          sensorData.phosphorus,
+          sensorData.potassium,
+        ] }]
+      }}
+      width={340}
+      height={260}
+      fromZero
+      yAxisLabel=""
+      yAxisSuffix=""
+      chartConfig={{
+        backgroundColor: '#F2E9D7',
+        backgroundGradientFrom: '#F2E9D7',
+        backgroundGradientTo: '#F2E9D7',
+        decimalPlaces: 2,
+        color: (opacity = 1) => `rgba(51, 88, 43, ${opacity})`,
+        labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+        style: { borderRadius: 16 },
+        propsForLabels: { fontSize: 10, textAnchor: 'middle' },
+        barPercentage: 0.7
+      }}
+      style={{ marginVertical: 8, borderRadius: 16, alignSelf: 'center' }}
+      verticalLabelRotation={-15}
+      showValuesOnTopOfBars
+    />
+  </View>
+
       </View>
     </ScrollView>
   );
