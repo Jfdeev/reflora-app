@@ -10,33 +10,35 @@ import { default as chartConfig, default as styles } from './dataDetailsScreen';
 interface SensorDataDetail {
   sensorDataId: number;
   soilHumidity: number;
-  soilHumidityLevel: 'Ok' | 'Alerta' | 'Crítico';
+  levelHumidity: 'Ok' | 'Alerta' | 'Crítico';
   temperature: number;
-  temperatureLevel: 'Ok' | 'Alerta' | 'Crítico';
+  levelTemperature: 'Ok' | 'Alerta' | 'Crítico';
   condutivity: number;
-  condutivityLevel: 'Ok' | 'Alerta' | 'Crítico';
+  levelCondutivity: 'Ok' | 'Alerta' | 'Crítico';
   ph: number;
-  phLevel: 'Ok' | 'Alerta' | 'Crítico';
+  levelPh: 'Ok' | 'Alerta' | 'Crítico';
   nitrogen: number;
-  nitrogenLevel: 'Ok' | 'Alerta' | 'Crítico';
+  levelNitrogen: 'Ok' | 'Alerta' | 'Crítico';
   phosphorus: number;
-  phosphorusLevel: 'Ok' | 'Alerta' | 'Crítico';
+  levelPhosphorus: 'Ok' | 'Alerta' | 'Crítico';
   potassium: number;
-  potassiumLevel: 'Ok' | 'Alerta' | 'Crítico';
+  levelPotassium: 'Ok' | 'Alerta' | 'Crítico';
   dateTime: string;
 }
 
-type MetricKey = keyof Omit<SensorDataDetail, 'sensorDataId' | 'dateTime' | `${string}Level`>;
+type levelsKey = 'Humidity' | 'Temperature' | 'Condutivity' | 'Ph' | 'Nitrogen' | 'Phosphorus' | 'Potassium';
 
-const metricConfig: Record<MetricKey, { label: string; icon: any; unit: string }> = {
-  soilHumidity: { label: 'Umidade do Solo', icon: 'leaf', unit: '%' },
-  temperature: { label: 'Temperatura', icon: 'thermometer', unit: '°C' },
-  condutivity: { label: 'Condutividade', icon: 'water', unit: 'µS/cm' },
-  ph: { label: 'pH', icon: 'water', unit: '' },
-  nitrogen: { label: 'Nitrogênio', icon: 'leaf', unit: 'mg/L' },
-  phosphorus: { label: 'Fósforo', icon: 'leaf', unit: 'mg/L' },
-  potassium: { label: 'Potássio', icon: 'leaf', unit: 'mg/L' },
-};
+type MetricKey = keyof Pick<SensorDataDetail, 'soilHumidity' | 'temperature' | 'condutivity' | 'ph' | 'nitrogen' | 'phosphorus' | 'potassium'>;
+
+const parameters = [
+  { label: 'Umidade do Solo', metric: 'soilHumidity', levelKey: 'levelHumidity', suffix: '%', icon: 'water' },
+  { label: 'Temperatura', metric: 'temperature', levelKey: 'levelTemperature', suffix: 'ºC', icon: 'thermometer' },
+  { label: 'Condutividade do Solo', metric: 'condutivity', levelKey: 'levelCondutivity', suffix: 'µS/cm', icon: 'analytics' },
+  { label: 'PH', metric: 'ph', levelKey: 'levelPh', suffix: '', icon: 'flask' },
+  { label: 'Nitrogênio', metric: 'nitrogen', levelKey: 'levelNitrogen', suffix: 'mg/L', icon: 'leaf' },
+  { label: 'Fósforo', metric: 'phosphorus', levelKey: 'levelPhosphorus', suffix: 'mg/L', icon: 'flower' },
+  { label: 'Potássio', metric: 'potassium', levelKey: 'levelPotassium', suffix: 'mg/L', icon: 'nutrition' },
+] as const;
 
 const getColorByLevel = (level: string | null | undefined) => {
   const normalized = level?.toUpperCase?.() ?? 'DESCONHECIDO';
@@ -141,10 +143,10 @@ export default function DataDetailScreen() {
   if (loading) return <ActivityIndicator style={styles.styles.loader} size="large" />;
   if (!current) return <Text style={styles.styles.errorText}>Dado não encontrado</Text>;
 
-  const cfg = metricConfig[metric];
-  const currentValue = Number(current[metric]);
-  const levelKey = `${metric}Level` as keyof SensorDataDetail;
-  const level = current[levelKey] as 'Ok' | 'Alerta' | 'Crítico';
+  const cfg = parameters.find(p => p.metric === metric);
+  if (!cfg) return <Text style={styles.styles.errorText}>Métrica inválida</Text>;
+  const level = current[cfg.levelKey] as 'Ok' | 'Alerta' | 'Crítico';
+  const currentValue = current[metric];
   const suggestion = getSuggestion(metric, currentValue, level);
 
   const recentData = allData.slice(-4);
@@ -162,7 +164,7 @@ export default function DataDetailScreen() {
 
       <View style={[styles.styles.currentCard, { backgroundColor: getColorByLevel(level) }]}>
         <Ionicons name={cfg.icon} size={28} color="#FFF" />
-        <Text style={styles.styles.currentValue}>{currentValue}{cfg.unit}</Text>
+        <Text style={styles.styles.currentValue}>{currentValue}{cfg.suffix}</Text>
         <Text style={styles.styles.currentTime}>
           Registrado em: {new Date(current.dateTime).toLocaleString()}
         </Text>
@@ -187,19 +189,19 @@ export default function DataDetailScreen() {
           <View style={styles.styles.statCard}>
             <Text style={styles.styles.statLabel}>Mínimo</Text>
             <Text style={styles.styles.statValue}>
-              {Math.min(...allData.map(d => Number(d[metric]))).toFixed(2)}{cfg.unit}
+              {Math.min(...allData.map(d => Number(d[metric]))).toFixed(2)}{cfg.suffix}
             </Text>
           </View>
           <View style={styles.styles.statCard}>
             <Text style={styles.styles.statLabel}>Máximo</Text>
             <Text style={styles.styles.statValue}>
-              {Math.max(...allData.map(d => Number(d[metric]))).toFixed(2)}{cfg.unit}
+              {Math.max(...allData.map(d => Number(d[metric]))).toFixed(2)}{cfg.suffix}
             </Text>
           </View>
           <View style={styles.styles.statCard}>
             <Text style={styles.styles.statLabel}>Média</Text>
             <Text style={styles.styles.statValue}>
-              {(allData.reduce((sum, d) => sum + Number(d[metric]), 0) / allData.length).toFixed(2)}{cfg.unit}
+              {(allData.reduce((sum, d) => sum + Number(d[metric]), 0) / allData.length).toFixed(2)}{cfg.suffix}
             </Text>
           </View>
         </View>

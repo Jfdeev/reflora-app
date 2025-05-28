@@ -112,7 +112,7 @@ export default function NotificationsScreen() {
   const deleteAlert = async (alertId: number) => {
     try {
       const token = await AsyncStorage.getItem('token');
-      const res = await fetch(`${apiUrl}/alerts/${alertId}`, {
+      const res = await fetch(`${apiUrl}/alert/${alertId}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });

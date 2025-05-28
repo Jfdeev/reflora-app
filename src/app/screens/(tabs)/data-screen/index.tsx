@@ -44,11 +44,11 @@ type Metric =
 const parameters = [
   { label: 'Umidade do Solo', metric: 'soilHumidity', levelKey: 'levelHumidity', suffix: '%' },
   { label: 'Temperatura', metric: 'temperature', levelKey: 'levelTemperature', suffix: 'ºC' },
-  { label: 'Condutividade do Solo', metric: 'condutivity', levelKey: 'levelCondutivity', suffix: '' },
+  { label: 'Condutividade do Solo', metric: 'condutivity', levelKey: 'levelCondutivity', suffix: 'µS/cm' },
   { label: 'PH', metric: 'ph', levelKey: 'levelPh', suffix: '' },
-  { label: 'Nitrogênio', metric: 'nitrogen', levelKey: 'levelNitrogen', suffix: '%' },
-  { label: 'Fósforo', metric: 'phosphorus', levelKey: 'levelPhosphorus', suffix: '%' },
-  { label: 'Potássio', metric: 'potassium', levelKey: 'levelPotassium', suffix: '%' },
+  { label: 'Nitrogênio', metric: 'nitrogen', levelKey: 'levelNitrogen', suffix: 'mg/L' },
+  { label: 'Fósforo', metric: 'phosphorus', levelKey: 'levelPhosphorus', suffix: 'mg/L' },
+  { label: 'Potássio', metric: 'potassium', levelKey: 'levelPotassium', suffix: 'mg/L' },
 ] as const;
 
 // Cor baseada no nível textual retornado da lógica fuzzy
