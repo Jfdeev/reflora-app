@@ -52,19 +52,19 @@ const parameters = [
 ] as const;
 
 // Cor baseada no nível textual retornado da lógica fuzzy
-function getColorByLevel(level: string) {
-  switch (level.toLowerCase()) {
-    case 'ideal':
-      return '#33582B'; // verde
-    case 'intermediário':
-    case 'intermediario':
-      return '#CCAD2D'; // amarelo
-    case 'crítico':
-    case 'critico':
+const getColorByLevel = (level: string | null | undefined) => {
+  const normalized = level?.toUpperCase?.() ?? 'DESCONHECIDO';
+  switch (normalized) {
+    case 'OK':
+      return '#33582B';
+    case 'ALERTA':
+      return '#CCAD2D';
+    case 'CRÍTICO':
+      return '#CC5050';
     default:
-      return '#CC5050'; // vermelho
+      return '#F2E9D7'; // cor neutra para desconhecido ou nulo
   }
-}
+};
 
 export default function DataScreen() {
   const apiUrl = Constants?.expoConfig?.extra?.apiUrl;
@@ -82,8 +82,14 @@ export default function DataScreen() {
       headers: { Authorization: `Bearer ${token}` },
     });
     const arr: SensorData[] = await res.json();
-    if (res.ok && arr.length) setSensorData(arr[arr.length - 1]);
-    else setSensorData(null);
+    if (res.ok && arr.length) {
+      const sorted = arr
+        .filter(d => d.dateTime !== null)
+        .sort((a, b) => new Date(a.dateTime!).getTime() - new Date(b.dateTime!).getTime());
+      setSensorData(sorted[sorted.length - 1]);
+    } else {
+      setSensorData(null);
+    }
   };
 
   const fetchUserSensors = async () => {
@@ -150,7 +156,7 @@ export default function DataScreen() {
               <Pressable key={metric} style={styles.cardWrapper} onPress={() => openDetail(metric)}>
                 <View style={[styles.card, { backgroundColor: getColorByLevel(level) }]}>
                   <Text style={styles.cardTextLabel}>{label}:</Text>
-                  <Text style={styles.cardTextValue}>{raw.toFixed(2)}{suffix}</Text>
+                  <Text style={styles.cardTextValue}>{raw != null ? `${raw.toFixed(2)}${suffix}` : 'N/A'}</Text>
                 </View>
               </Pressable>
             );
