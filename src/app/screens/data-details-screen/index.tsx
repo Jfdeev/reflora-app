@@ -59,42 +59,44 @@ function getSuggestion(metric: MetricKey, value: number, level: 'Ok' | 'Alerta' 
 
   switch (metric) {
     case 'soilHumidity':
-      if (value < 20) return 'O solo está muito seco. Você pode espalhar folhas secas, capim ou palha vegetal para cobrir a terra. Outra opção é colocar jornais úmidos entre as plantas para manter a umidade.';
-      if (value > 60) return 'O solo está encharcado. Tente fazer pequenos sulcos ou canais para escoar o excesso de água. Também pode misturar um pouco de areia grossa na terra para ajudar na drenagem.';
+      if (value < 50) return 'O solo está muito seco. Você pode espalhar folhas secas, capim ou palha vegetal para cobrir a terra. Outra opção é colocar jornais úmidos entre as plantas para manter a umidade.';
+      if (value > 50) return 'O solo está encharcado. Tente fazer pequenos sulcos ou canais para escoar o excesso de água. Também pode misturar um pouco de areia grossa na terra para ajudar na drenagem.';
       break;
 
     case 'temperature':
-      if (value < 18) return 'A temperatura está baixa para o desenvolvimento das plantas. Você pode cobrir o solo com uma lona preta durante a noite para manter o calor, ou plantar leguminosas como o feijão-de-porco para ajudar a aquecer o ambiente.';
-      if (value > 30) return 'Está fazendo muito calor. Use tecidos brancos ou coberturas claras para proteger o solo e as plantas do sol forte. Também pode borrifar um pouco de água nas plantas pela manhã para refrescar.';
+      if (value < 25) return 'A temperatura está baixa para o desenvolvimento das plantas. Você pode cobrir o solo com uma lona preta durante a noite para manter o calor, ou plantar leguminosas como o feijão-de-porco para ajudar a aquecer o ambiente.';
+      if (value > 25) return 'Está fazendo muito calor. Use tecidos brancos ou coberturas claras para proteger o solo e as plantas do sol forte. Também pode borrifar um pouco de água nas plantas pela manhã para refrescar.';
       break;
 
     case 'condutivity':
-      if (value < 20) return 'O solo tem poucos nutrientes solúveis. Prepare um "chá de composto", fervendo restos de vegetais e folhas, e use essa água para regar o solo.';
-      if (value > 200) return 'O solo está com muitos sais. Regue bem o local e deixe a água escorrer naturalmente para ajudar a limpar o excesso. Depois, adicione bastante matéria orgânica como folhas secas ou composto caseiro.';
+      if (value < 300) return 'O solo tem poucos nutrientes solúveis. Prepare um "chá de composto", fervendo restos de vegetais e folhas, e use essa água para regar o solo.';
+      if (value > 300) return 'O solo está com muitos sais. Regue bem o local e deixe a água escorrer naturalmente para ajudar a limpar o excesso. Depois, adicione bastante matéria orgânica como folhas secas ou composto caseiro.';
       break;
 
     case 'ph':
-      if (value < 5.5) return 'O solo está muito ácido. Você pode moer cascas de ovos e espalhar no solo. Isso ajuda a equilibrar o pH e melhora o ambiente para as raízes.';
-      if (value > 7.5) return 'O solo está muito alcalino. Tente misturar um pouco de borra de café e vinagre diluído na água e regar a área. Isso ajuda a tornar o solo mais neutro.';
+      if (value < 6.5) return 'O solo está muito ácido. Você pode moer cascas de ovos e espalhar no solo. Isso ajuda a equilibrar o pH e melhora o ambiente para as raízes.';
+      if (value > 6.5) return 'O solo está muito alcalino. Tente misturar um pouco de borra de café e vinagre diluído na água e regar a área. Isso ajuda a tornar o solo mais neutro.';
       break;
 
     case 'nitrogen':
-      if (value < 15) return 'Falta nitrogênio no solo, e isso afeta o crescimento das plantas. Espalhe borra de café no canteiro e misture com a terra. Isso vai ajudar a fortalecer as folhas.';
-      if (value > 60) return 'Tem nitrogênio demais no solo. Isso pode atrapalhar o equilíbrio dos nutrientes. Misture um pouco de carvão vegetal na terra e reduza o uso de adubos por um tempo.';
+      if (value < 30) return 'Falta nitrogênio no solo, e isso afeta o crescimento das plantas. Espalhe borra de café no canteiro e misture com a terra. Isso vai ajudar a fortalecer as folhas.';
+      if (value > 30) return 'Tem nitrogênio demais no solo. Isso pode atrapalhar o equilíbrio dos nutrientes. Misture um pouco de carvão vegetal na terra e reduza o uso de adubos por um tempo.';
       break;
 
     case 'phosphorus':
-      if (value < 10) return 'Seu solo precisa de mais fósforo para ajudar no crescimento das raízes. Triture alguns ossos (como de frango ou boi), seque bem e espalhe o pó na terra.';
-      if (value > 50) return 'Há fósforo demais no solo. Evite adubar por um tempo e troque o tipo de planta cultivada. Plantas como feijão ou amendoim ajudam a reequilibrar o solo.';
+      if (value < 200) return 'Seu solo precisa de mais fósforo para ajudar no crescimento das raízes. Triture alguns ossos (como de frango ou boi), seque bem e espalhe o pó na terra.';
+      if (value > 200) return 'Há fósforo demais no solo. Evite adubar por um tempo e troque o tipo de planta cultivada. Plantas como feijão ou amendoim ajudam a reequilibrar o solo.';
       break;
 
     case 'potassium':
-      if (value < 80) return 'As plantas estão precisando de potássio. Corte cascas de banana em pedaços pequenos e espalhe pela terra, cobrindo com um pouco de palha ou folhas.';
-      if (value > 350) return 'Tem potássio demais no solo. Faça uma irrigação mais profunda e adicione bastante matéria orgânica, como folhas secas e restos de vegetais, para equilibrar.';
+      if (value < 190) return 'As plantas estão precisando de potássio. Corte cascas de banana em pedaços pequenos e espalhe pela terra, cobrindo com um pouco de palha ou folhas.';
+      if (value > 190) return 'Tem potássio demais no solo. Faça uma irrigação mais profunda e adicione bastante matéria orgânica, como folhas secas e restos de vegetais, para equilibrar.';
       break;
   }
+
   return null;
 }
+
 
 export default function DataDetailScreen() {
   const apiUrl = Constants?.expoConfig?.extra?.apiUrl;
@@ -119,15 +121,12 @@ export default function DataDetailScreen() {
         if (!res.ok) throw new Error('Erro ao carregar dados do sensor');
 
         const arr: SensorDataDetail[] = await res.json();
-        console.log('Dados recebidos da API:', arr); // Depuração: verificar o array retornado
-        console.log('Procurando sensorDataId:', dataId); // Depuração: verificar o dataId
 
         setAllData(arr);
 
         // Converter dataId para número e buscar o item correspondente
         const numericDataId = Number(dataId);
         const foundData = arr.find(d => d.sensorDataId === numericDataId);
-        console.log('Item encontrado:', foundData); // Depuração: verificar se o item foi encontrado
 
         setCurrent(foundData || null);
         setLoading(false);
